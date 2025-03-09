@@ -266,13 +266,13 @@ const Player: Component<Props> = (props) => {
   }
 
   return (
-    <div>
+    <div class="w-full">
       <Notification it={notification} show={showNotification()} />
-      <div>
-        <div id="player"></div>
+      <div class="w-full aspect-video mb-4">
+        <div id="player" class="w-full h-full"></div>
       </div>
 
-      <form onSubmit={submitForm}>
+      <form onSubmit={submitForm} class="w-full space-y-4">
         <Show when={props.loopId}>
           <div id="loop-id" class="field">
             <div class="control disabled">
@@ -282,9 +282,9 @@ const Player: Component<Props> = (props) => {
           </div>
         </Show>
 
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">Video URL</legend>
-          <div class="join">
+        <fieldset class="fieldset border border-gray-300 rounded-md p-4 w-full">
+          <legend class="fieldset-legend px-2 text-sm font-medium text-gray-700">Video URL</legend>
+          <div class="join w-full flex flex-wrap md:flex-nowrap">
             <div class="join-item">
               <input
                 class="input validator"
@@ -308,14 +308,13 @@ const Player: Component<Props> = (props) => {
 
 
         </fieldset>
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">Loop Name</legend>
+        <fieldset class="fieldset border border-gray-300 rounded-md p-4 w-full">
+          <legend class="fieldset-legend px-2 text-sm font-medium text-gray-700">Loop Name</legend>
           <input class="input" type="text" name="loopName" value={props.loopName || "Chorus"} />
         </fieldset>
-        <fieldset class="fieldset">
-
-          <legend class="fieldset-legend">Start Minute : Start Second</legend>
-          <div class="join">
+        <fieldset class="fieldset border border-gray-300 rounded-md p-4 w-full">
+          <legend class="fieldset-legend px-2 text-sm font-medium text-gray-700">Start Minute : Start Second</legend>
+          <div class="join w-full flex flex-wrap md:flex-nowrap">
             <div class="join-item">
               <input
                 type="number"
@@ -350,7 +349,7 @@ const Player: Component<Props> = (props) => {
           </div>
 
         </fieldset>
-        <div class="join">
+        <div class="join flex flex-wrap md:flex-nowrap justify-center gap-2 my-4">
           <div class="join-item">
             <Show
               when={video.playing}
@@ -415,10 +414,9 @@ const Player: Component<Props> = (props) => {
             </button>
           </label>
         </div>
-        <fieldset class="fieldset">
-
-          <legend class="fieldset-legend">End Minute : End Second</legend>
-          <div class="join">
+        <fieldset class="fieldset border border-gray-300 rounded-md p-4 w-full">
+          <legend class="fieldset-legend px-2 text-sm font-medium text-gray-700">End Minute : End Second</legend>
+          <div class="join w-full flex flex-wrap md:flex-nowrap">
             <div class="join-item">
               <input
                 type="number"
@@ -455,7 +453,7 @@ const Player: Component<Props> = (props) => {
 
 
 
-        <div class="w-full max-w-xs">
+        <div class="w-full md:max-w-md lg:max-w-lg mx-auto my-4">
           <input class="range" type="range" name="playbackRate" min="0.3" max="1.5" step="0.05"
             value={video.playbackRate}
             onInput={(e) => setVideo("playbackRate", Number(e.target.value))}
@@ -485,18 +483,18 @@ const Player: Component<Props> = (props) => {
           </div>
         </div>
 
-        <div class="join gap-2">
+        <div class="join gap-2 flex flex-wrap md:flex-nowrap justify-center my-4">
 
           <button type="button" class="btn btn-outline join-item" onClick={() => setVideo("playbackRate", (rate) => Math.max(rate - 0.05, 0))}>-5%</button>
           <output id="value" class="join-item">Speed: {video.playbackRate.toFixed(2)}x</output>
           <button type="button" class="btn btn-outline join-item" onClick={() => setVideo("playbackRate", (rate) => Math.min(rate + 0.05, 1.5))}>+5%</button>
         </div>
         <Show when={props.enableSave} fallback={props.fallback}>
-          <div class="field is-grouped is-justify-content-center">
+          <div class="flex justify-center gap-4 mt-6">
             <Show when={props.loopId}>
-              <button class="button" type="submit">Update</button>
+              <button class="btn btn-outline" type="submit">Update</button>
             </Show>
-            <button class="button is-link" type="submit">Save</button>
+            <button class="btn btn-primary" type="submit">Save</button>
           </div>
         </Show>
       </form>
