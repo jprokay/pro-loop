@@ -285,9 +285,9 @@ const Player: Component<Props> = (props) => {
         <fieldset class="fieldset border border-gray-300 rounded-md p-4 w-full">
           <legend class="fieldset-legend px-2 text-sm font-medium text-gray-700">Video URL</legend>
           <div class="join w-full flex flex-wrap md:flex-nowrap">
-            <div class="join-item">
+            <div class="join-item w-full md:w-4/5">
               <input
-                class="input validator"
+                class="input validator w-full"
                 type="url"
                 name="videoUrl"
                 inputmode="url"
@@ -302,7 +302,7 @@ const Player: Component<Props> = (props) => {
 
               <div class="validator-hint hidden">Enter valid email address</div>
             </div>
-            <button type="button" class="btn btn-secondary join-item" onClick={() => setVideo("videoUrl", "")}>Clear</button>
+            <button type="button" class="btn btn-secondary join-item w-full md:w-1/5" onClick={() => setVideo("videoUrl", "")}>Clear</button>
             <input class="input" name="videoId" value={video.videoId} readonly={true} type="hidden" />
           </div>
 
@@ -310,15 +310,15 @@ const Player: Component<Props> = (props) => {
         </fieldset>
         <fieldset class="fieldset border border-gray-300 rounded-md p-4 w-full">
           <legend class="fieldset-legend px-2 text-sm font-medium text-gray-700">Loop Name</legend>
-          <input class="input" type="text" name="loopName" value={props.loopName || "Chorus"} />
+          <input class="input w-full" type="text" name="loopName" value={props.loopName || "Chorus"} />
         </fieldset>
         <fieldset class="fieldset border border-gray-300 rounded-md p-4 w-full">
           <legend class="fieldset-legend px-2 text-sm font-medium text-gray-700">Start Minute : Start Second</legend>
           <div class="join w-full flex flex-wrap md:flex-nowrap">
-            <div class="join-item">
+            <div class="join-item w-2/5 md:w-[40%]">
               <input
                 type="number"
-                class="input validator"
+                class="input validator w-full"
                 name="startMinutes"
                 required={true}
                 inputmode="numeric"
@@ -329,10 +329,10 @@ const Player: Component<Props> = (props) => {
 
               <div class="validator-hint hidden">Value must be greater than or equal to 0</div>
             </div>
-            <div class="join-item">
+            <div class="join-item w-2/5 md:w-[40%]">
               <input
                 type="number"
-                class="input validator"
+                class="input validator w-full"
                 name="startSeconds"
                 inputmode="numeric"
                 required={true}
@@ -345,7 +345,7 @@ const Player: Component<Props> = (props) => {
               <div class="validator-hint hidden">Value must be greater than or equal to 0</div>
             </div>
 
-            <button type="button" class="btn btn-secondary join-item" onClick={setStartToNow}>Now</button>
+            <button type="button" class="btn btn-secondary join-item w-1/5 md:w-1/5" onClick={setStartToNow}>Now</button>
           </div>
 
         </fieldset>
@@ -417,10 +417,10 @@ const Player: Component<Props> = (props) => {
         <fieldset class="fieldset border border-gray-300 rounded-md p-4 w-full">
           <legend class="fieldset-legend px-2 text-sm font-medium text-gray-700">End Minute : End Second</legend>
           <div class="join w-full flex flex-wrap md:flex-nowrap">
-            <div class="join-item">
+            <div class="join-item w-2/5 md:w-[40%]">
               <input
                 type="number"
-                class="input validator"
+                class="input validator w-full"
                 name="endMinutes"
                 required={true}
                 inputmode="numeric"
@@ -431,10 +431,10 @@ const Player: Component<Props> = (props) => {
 
               <div class="validator-hint hidden">Value must be greater than or equal to 0</div>
             </div>
-            <div class="join-item">
+            <div class="join-item w-2/5 md:w-[40%]">
               <input
                 type="number"
-                class="input validator"
+                class="input validator w-full"
                 name="endSeconds"
                 inputmode="numeric"
                 required={true}
@@ -447,7 +447,7 @@ const Player: Component<Props> = (props) => {
               <div class="validator-hint hidden">Value must be greater than or equal to 0</div>
             </div>
 
-            <button type="button" class="btn btn-secondary join-item" onClick={setEndToNow}>Now</button>
+            <button type="button" class="btn btn-secondary join-item w-1/5 md:w-1/5" onClick={setEndToNow}>Now</button>
           </div>
         </fieldset>
 
