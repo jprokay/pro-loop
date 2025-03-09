@@ -302,7 +302,7 @@ const Player: Component<Props> = (props) => {
 
               <div class="validator-hint hidden">Enter valid email address</div>
             </div>
-            <button type="button" class="btn btn-accent join-item w-full md:w-1/5" onClick={() => setVideo("videoUrl", "")}>Clear</button>
+            <button type="button" class="btn btn-accent join-item w-full md:w-1/5 py-3 text-base" onClick={() => setVideo("videoUrl", "")}>Clear</button>
             <input class="input" name="videoId" value={video.videoId} readonly={true} type="hidden" />
           </div>
 
@@ -345,7 +345,7 @@ const Player: Component<Props> = (props) => {
               <div class="validator-hint hidden">Value must be greater than or equal to 0</div>
             </div>
 
-            <button type="button" class="btn btn-accent join-item w-1/5 md:w-1/5" onClick={setStartToNow}>Now</button>
+            <button type="button" class="btn btn-accent join-item w-1/5 md:w-1/5 py-3 text-base" onClick={setStartToNow}>Now</button>
           </div>
 
         </fieldset>
@@ -355,7 +355,7 @@ const Player: Component<Props> = (props) => {
               when={video.playing}
               fallback={
                 <button
-                  class="btn btn-primary w-full"
+                  class="btn btn-primary w-full py-6 text-lg"
                   type="button"
                   onClick={() => playVideo()}
                 >
@@ -376,7 +376,7 @@ const Player: Component<Props> = (props) => {
               }
             >
               <button
-                class="btn btn-primary w-full"
+                class="btn btn-primary w-full py-6 text-lg"
                 type="button"
                 onClick={() => pauseVideo()}
               >
@@ -402,7 +402,7 @@ const Player: Component<Props> = (props) => {
 
           <div class="join-item w-full sm:w-1/2">
             <button
-              class={`btn btn-secondary w-full ${video.loop ? 'btn-active' : ''}`}
+              class={`btn btn-secondary w-full py-6 text-lg ${video.loop ? 'btn-active' : ''}`}
               type="button"
               onClick={() => setVideo("loop", (loop) => !loop)}
             >
@@ -446,7 +446,7 @@ const Player: Component<Props> = (props) => {
               <div class="validator-hint hidden">Value must be greater than or equal to 0</div>
             </div>
 
-            <button type="button" class="btn btn-accent join-item w-1/5 md:w-1/5" onClick={setEndToNow}>Now</button>
+            <button type="button" class="btn btn-accent join-item w-1/5 md:w-1/5 py-3 text-base" onClick={setEndToNow}>Now</button>
           </div>
         </fieldset>
 
@@ -480,16 +480,16 @@ const Player: Component<Props> = (props) => {
         </div>
 
         <div class="join gap-2 flex flex-wrap md:flex-nowrap justify-center items-center my-4">
-          <button type="button" class="btn btn-accent btn-outline join-item" onClick={() => setVideo("playbackRate", (rate) => Math.max(rate - 0.05, 0.5))}>-5%</button>
-          <output id="value" class="join-item text-center min-w-20">Speed: {Math.round(video.playbackRate * 100)}%</output>
-          <button type="button" class="btn btn-accent btn-outline join-item" onClick={() => setVideo("playbackRate", (rate) => Math.min(rate + 0.05, 1.5))}>+5%</button>
+          <button type="button" class="btn btn-accent btn-outline join-item py-4 px-6 text-lg" onClick={() => setVideo("playbackRate", (rate) => Math.max(rate - 0.05, 0.5))}>-5%</button>
+          <output id="value" class="join-item text-center min-w-24 text-lg">Speed: {Math.round(video.playbackRate * 100)}%</output>
+          <button type="button" class="btn btn-accent btn-outline join-item py-4 px-6 text-lg" onClick={() => setVideo("playbackRate", (rate) => Math.min(rate + 0.05, 1.5))}>+5%</button>
         </div>
         <Show when={props.enableSave} fallback={props.fallback}>
           <div class="flex justify-center gap-4 mt-6">
             <Show when={props.loopId}>
-              <button class="btn btn-outline" type="submit">Update</button>
+              <button class="btn btn-outline py-4 px-8 text-lg" type="submit">Update</button>
             </Show>
-            <button class="btn btn-primary" type="submit">Save</button>
+            <button class="btn btn-primary py-4 px-8 text-lg" type="submit">Save</button>
           </div>
         </Show>
       </form>
