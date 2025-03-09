@@ -479,10 +479,9 @@ const Player: Component<Props> = (props) => {
           </div>
         </div>
 
-        <div class="join gap-2 flex flex-wrap md:flex-nowrap justify-center my-4">
-
-          <button type="button" class="btn btn-outline join-item" onClick={() => setVideo("playbackRate", (rate) => Math.max(rate - 0.05, 0))}>-5%</button>
-          <output id="value" class="join-item">Speed: {video.playbackRate.toFixed(2)}x</output>
+        <div class="join gap-2 flex flex-wrap md:flex-nowrap justify-center items-center my-4">
+          <button type="button" class="btn btn-outline join-item" onClick={() => setVideo("playbackRate", (rate) => Math.max(rate - 0.05, 0.5))}>-5%</button>
+          <output id="value" class="join-item text-center min-w-20">Speed: {Math.round(video.playbackRate * 100)}%</output>
           <button type="button" class="btn btn-outline join-item" onClick={() => setVideo("playbackRate", (rate) => Math.min(rate + 0.05, 1.5))}>+5%</button>
         </div>
         <Show when={props.enableSave} fallback={props.fallback}>
