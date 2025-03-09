@@ -1,0 +1,27 @@
+{
+	"name": "example-with-tailwindcss",
+	"type": "module",
+	"scripts": {
+		"dev": "vinxi dev",
+		"build": "vinxi build",
+		"start": "vinxi start",
+		"preview": "pnpm run build && npx wrangler pages dev",
+		"deploy": "pnpm run build && wrangler pages deploy"
+	},
+	"dependencies": {
+		"@solidjs/router": "^0.15.0",
+		"@solidjs/start": "^1.1.0",
+		"solid-js": "^1.9.5",
+		"vinxi": "^0.5.3"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20250303.0",
+		"@tailwindcss/vite": "^4.0.7",
+		"tailwindcss": "^4.0.7",
+		"wrangler": "^3.114.0"
+	},
+	"engines": {
+		"node": ">=22"
+	},
+	"packageManager": "pnpm@8.15.5+sha1.a58c038faac410c947dbdb93eb30994037d0fce2"
+}
