@@ -454,7 +454,7 @@ const Player: Component<Props> = (props) => {
 
 
         <div class="w-full md:max-w-md lg:max-w-lg mx-auto my-4">
-          <input class="range" type="range" name="playbackRate" min="0.3" max="1.5" step="0.05"
+          <input class="range w-full" type="range" name="playbackRate" min="0.5" max="1.5" step="0.05"
             value={video.playbackRate}
             onInput={(e) => setVideo("playbackRate", Number(e.target.value))}
             list="rates"
@@ -467,18 +467,15 @@ const Player: Component<Props> = (props) => {
             <span>|</span>
             <span>|</span>
             <span>|</span>
-            <span>|</span>
           </div>
           <div class="flex justify-between px-2.5 mt-2 text-xs">
-            <span>30%</span>
-            <span>40%</span>
-            <span>60%</span>
-            <span>80%</span>
+            <span>50%</span>
+            <span>70%</span>
+            <span>90%</span>
             <span>100%</span>
             <span>110%</span>
-            <span>120%</span>
             <span>130%</span>
-            <span>140%</span>
+            <span>150%</span>
 
           </div>
         </div>
