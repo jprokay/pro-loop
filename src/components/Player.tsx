@@ -73,6 +73,8 @@ const Player: Component<Props> = (props) => {
     playbackRate: 1.0,
     duration: 0,
     name: undefined,
+    title: "",
+    isVisible: true
   });
 
   const { show: showNotification, setShow: setShowNotification, notification, setNotification } = useNotification()
@@ -92,6 +94,24 @@ const Player: Component<Props> = (props) => {
     });
 
     setPlayer(ytPlayer);
+    
+    // Get video title
+    ytPlayer.getVideoData().then((data: any) => {
+      if (data && data.title) {
+        setVideo("title", data.title);
+      }
+    }).catch(() => {
+      // Fallback method using API events
+      ytPlayer.addEventListener('onStateChange', (event) => {
+        if (event.data === 1) { // Playing
+          ytPlayer.getVideoData().then((data: any) => {
+            if (data && data.title) {
+              setVideo("title", data.title);
+            }
+          });
+        }
+      });
+    });
   });
 
   function changeVideo(url: string) {
@@ -114,7 +134,17 @@ const Player: Component<Props> = (props) => {
       v.duration = 0
       v.videoId = videoId
       v.videoUrl = url
+      v.title = "" // Reset title until new one is loaded
     }))
+    
+    // Get new video title after a short delay to allow the video to load
+    setTimeout(() => {
+      player()?.getVideoData().then((data: any) => {
+        if (data && data.title) {
+          setVideo("title", data.title);
+        }
+      });
+    }, 1000);
   }
 
   const timer = setInterval(() => {
@@ -244,6 +274,10 @@ const Player: Component<Props> = (props) => {
     player()?.pauseVideo();
     setVideo("playing", false)
   }
+  
+  function toggleVideoVisibility() {
+    setVideo("isVisible", !video.isVisible);
+  }
 
   function changeStart(startMinute: number, startSecond: number) {
     const startAsSeconds = startMinute * 60 + startSecond;
@@ -268,8 +302,31 @@ const Player: Component<Props> = (props) => {
   return (
     <div class="w-full">
       <Notification it={notification} show={showNotification()} />
-      <div class="w-full aspect-video mb-4">
-        <div id="player" class="w-full h-full"></div>
+      <div class="w-full mb-4 border-2 border-gray-300 rounded-lg overflow-hidden">
+        <div class="bg-gray-100 p-2 flex justify-between items-center">
+          <div class="font-medium text-gray-700 truncate max-w-[80%]">
+            {video.title || "Loading video..."}
+          </div>
+          <button 
+            type="button" 
+            class="btn btn-sm btn-outline" 
+            onClick={toggleVideoVisibility}
+          >
+            {video.isVisible ? (
+              <><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+              </svg>Hide Video</>
+            ) : (
+              <><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              </svg>Show Video</>
+            )}
+          </button>
+        </div>
+        <div class={`w-full ${video.isVisible ? 'aspect-video' : 'h-0'} transition-all duration-300`}>
+          <div id="player" class="w-full h-full"></div>
+        </div>
       </div>
 
       <form onSubmit={submitForm} class="w-full space-y-4">
