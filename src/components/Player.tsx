@@ -349,8 +349,8 @@ const Player: Component<Props> = (props) => {
           </div>
 
         </fieldset>
-        <div class="join flex flex-wrap md:flex-nowrap justify-center gap-2 my-4">
-          <div class="join-item w-1/2">
+        <div class="join flex flex-col sm:flex-row w-full justify-center gap-2 my-4">
+          <div class="join-item w-full sm:w-1/2">
             <Show
               when={video.playing}
               fallback={
@@ -400,7 +400,7 @@ const Player: Component<Props> = (props) => {
             </Show>
           </div>
 
-          <div class="join-item w-1/2">
+          <div class="join-item w-full sm:w-1/2">
             <button
               class={`btn btn-accent w-full ${video.loop ? 'btn-active' : ''}`}
               type="button"
