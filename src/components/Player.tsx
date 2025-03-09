@@ -350,12 +350,12 @@ const Player: Component<Props> = (props) => {
 
         </fieldset>
         <div class="join flex flex-wrap md:flex-nowrap justify-center gap-2 my-4">
-          <div class="join-item">
+          <div class="join-item w-1/2">
             <Show
               when={video.playing}
               fallback={
                 <button
-                  class="btn btn-primary"
+                  class="btn btn-primary w-full"
                   type="button"
                   onClick={() => playVideo()}
                 >
@@ -376,7 +376,7 @@ const Player: Component<Props> = (props) => {
               }
             >
               <button
-                class="btn btn-primary"
+                class="btn btn-primary w-full"
                 type="button"
                 onClick={() => pauseVideo()}
               >
@@ -400,19 +400,18 @@ const Player: Component<Props> = (props) => {
             </Show>
           </div>
 
-          <label id="set-loop" class="join-item">
+          <div class="join-item w-1/2">
             <button
-              class={`btn btn-accent ${video.loop ? 'btn-active' : ''}`}
+              class={`btn btn-accent w-full ${video.loop ? 'btn-active' : ''}`}
               type="button"
               onClick={() => setVideo("loop", (loop) => !loop)}
             >
-
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
               </svg>
               {video.loop ? "Stop Loop" : "Start Loop"}
             </button>
-          </label>
+          </div>
         </div>
         <fieldset class="fieldset border border-gray-300 rounded-md p-4 w-full">
           <legend class="fieldset-legend px-2 text-sm font-medium text-gray-700">End Minute : End Second</legend>
