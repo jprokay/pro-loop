@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@solid-primitives/scheduled':
+    specifier: ^1.5.0
+    version: 1.5.0(solid-js@1.9.5)
   '@solidjs/router':
     specifier: ^0.15.0
     version: 0.15.3(solid-js@1.9.5)
@@ -14,9 +17,15 @@ dependencies:
   solid-js:
     specifier: ^1.9.5
     version: 1.9.5
+  theme-change:
+    specifier: ^2.5.0
+    version: 2.5.0
   vinxi:
     specifier: ^0.5.3
     version: 0.5.3(typescript@5.8.2)
+  youtube-player:
+    specifier: ^5.6.0
+    version: 5.6.0
 
 devDependencies:
   '@cloudflare/workers-types':
@@ -25,6 +34,12 @@ devDependencies:
   '@tailwindcss/vite':
     specifier: ^4.0.7
     version: 4.0.12(vite@6.2.1)
+  '@types/youtube-player':
+    specifier: ^5.5.11
+    version: 5.5.11
+  daisyui:
+    specifier: ^5.0.0
+    version: 5.0.0
   tailwindcss:
     specifier: ^4.0.7
     version: 4.0.12
@@ -2001,6 +2016,14 @@ packages:
     engines: {node: '>=18'}
     dev: false
 
+  /@solid-primitives/scheduled@1.5.0(solid-js@1.9.5):
+    resolution: {integrity: sha512-RVw24IRNh1FQ4DCMb3OahB70tXIwc5vH8nhR4nNPsXwUPQeuOkLsDI5BlxaPk0vyZgqw9lDpufgI3HnPwplgDw==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      solid-js: 1.9.5
+    dev: false
+
   /@solidjs/router@0.15.3(solid-js@1.9.5):
     resolution: {integrity: sha512-iEbW8UKok2Oio7o6Y4VTzLj+KFCmQPGEpm1fS3xixwFBdclFVBvaQVeibl1jys4cujfAK5Kn6+uG2uBm3lxOMw==}
     peerDependencies:
@@ -2334,6 +2357,10 @@ packages:
   /@types/unist@3.0.3:
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
     dev: false
+
+  /@types/youtube-player@5.5.11:
+    resolution: {integrity: sha512-pM41CDBqJqBmTeJWnF7NOGz82IQoYOhqzMYXv5vKCXBqGiYSLldxMtpCk6KAEtADTy49S45AriYaCaZyeUX38Q==}
+    dev: true
 
   /@ungap/structured-clone@1.3.0:
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
@@ -2954,6 +2981,10 @@ packages:
   /csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
     dev: false
+
+  /daisyui@5.0.0:
+    resolution: {integrity: sha512-U0K9Bac3Bi3zZGm6ojrw12F0vBHTpEgf46zv/BYxLe07hF0Xnx7emIQliwaRBgJuYhY0BhwQ6wSnq5cJXHA2yA==}
+    dev: true
 
   /data-uri-to-buffer@2.0.2:
     resolution: {integrity: sha512-ND9qDTLc6diwj+Xe5cdAgVTbLVdXbtxTJRXRhli8Mowuaan+0EJOtdqJ0QCHNSSPyoXGx9HX2/VMnKeC34AChA==}
@@ -4037,6 +4068,10 @@ packages:
       uqr: 0.1.2
     dev: false
 
+  /load-script@1.0.0:
+    resolution: {integrity: sha512-kPEjMFtZvwL9TaZo0uZ2ml+Ye9HUMmPwbYRJ324qF9tqMejwykJ5ggTyvzmrbBeapCAbk98BSbTeovHEEP1uCA==}
+    dev: false
+
   /local-pkg@1.1.1:
     resolution: {integrity: sha512-WunYko2W1NcdfAFpuLUoucsgULmgDBRkdxHxWQ7mK0cQqwPiy8E1enjuRBrhLtZkB5iScJ1XIPdhVEFK8aOLSg==}
     engines: {node: '>=14'}
@@ -5018,6 +5053,10 @@ packages:
     dev: true
     optional: true
 
+  /sister@3.0.2:
+    resolution: {integrity: sha512-p19rtTs+NksBRKW9qn0UhZ8/TUI9BPw9lmtHny+Y3TinWlOa9jWh9xB0AtPSdmOy49NJJJSSe0Ey4C7h0TrcYA==}
+    dev: false
+
   /slash@5.1.0:
     resolution: {integrity: sha512-ZA6oR3T/pEyuqwMgAKT0/hAv8oAXckzbkmR0UkUosQ+Mc4RxGoJkRmwHgHufaenlyAgE1Mxgpdcrf75y6XcnDg==}
     engines: {node: '>=14.16'}
@@ -5260,6 +5299,10 @@ packages:
     resolution: {integrity: sha512-3/o9z3X0X0fTupwsYvR03pJ/DjWuqqrfwBgTQzdWDiQSm9KitAyz/9WqsT2JQW7KV2m+bC2ol/zqpW37NHxLaA==}
     dependencies:
       b4a: 1.6.7
+    dev: false
+
+  /theme-change@2.5.0:
+    resolution: {integrity: sha512-B/UdsgdHAGhSKHTAQnxg/etN0RaMDpehuJmZIjLMDVJ6DGIliRHGD6pODi1CXLQAN9GV0GSyB3G6yCuK05PkPQ==}
     dev: false
 
   /tiny-invariant@1.3.3:
@@ -5995,6 +6038,16 @@ packages:
       '@speed-highlight/core': 1.2.7
       cookie: 1.0.2
       youch-core: 0.3.2
+    dev: false
+
+  /youtube-player@5.6.0:
+    resolution: {integrity: sha512-x95fBbxV7eZ1ZsFtMLMcSGX0Jb/GPPj69RsooyEDVa9bzvvNZ4d5VjnBVBYoY85008VefkLvtaV+b+l38R/LMQ==}
+    dependencies:
+      debug: 4.4.0(supports-color@9.4.0)
+      load-script: 1.0.0
+      sister: 3.0.2
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /zip-stream@6.0.1:

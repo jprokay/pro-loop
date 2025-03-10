@@ -73,7 +73,7 @@ const Player: Component<Props> = (props) => {
     playbackRate: 1.0,
     duration: 0,
     name: undefined,
-    title: "",
+    title: "Boys",
     isVisible: true
   });
 
@@ -94,24 +94,8 @@ const Player: Component<Props> = (props) => {
     });
 
     setPlayer(ytPlayer);
-    
+
     // Get video title
-    ytPlayer.getVideoData().then((data: any) => {
-      if (data && data.title) {
-        setVideo("title", data.title);
-      }
-    }).catch(() => {
-      // Fallback method using API events
-      ytPlayer.addEventListener('onStateChange', (event) => {
-        if (event.data === 1) { // Playing
-          ytPlayer.getVideoData().then((data: any) => {
-            if (data && data.title) {
-              setVideo("title", data.title);
-            }
-          });
-        }
-      });
-    });
   });
 
   function changeVideo(url: string) {
@@ -136,15 +120,7 @@ const Player: Component<Props> = (props) => {
       v.videoUrl = url
       v.title = "" // Reset title until new one is loaded
     }))
-    
-    // Get new video title after a short delay to allow the video to load
-    setTimeout(() => {
-      player()?.getVideoData().then((data: any) => {
-        if (data && data.title) {
-          setVideo("title", data.title);
-        }
-      });
-    }, 1000);
+
   }
 
   const timer = setInterval(() => {
@@ -274,7 +250,7 @@ const Player: Component<Props> = (props) => {
     player()?.pauseVideo();
     setVideo("playing", false)
   }
-  
+
   function toggleVideoVisibility() {
     setVideo("isVisible", !video.isVisible);
   }
@@ -303,13 +279,13 @@ const Player: Component<Props> = (props) => {
     <div class="w-full">
       <Notification it={notification} show={showNotification()} />
       <div class="w-full mb-4 border-2 border-gray-300 rounded-lg overflow-hidden">
-        <div class="bg-gray-100 p-2 flex justify-between items-center">
-          <div class="font-medium text-gray-700 truncate max-w-[80%]">
+        <div class="p-2 flex justify-between items-center">
+          <h1 class="text-3xl font-mono text-primary-400 tracking-widest mb-1">
             {video.title || "Loading video..."}
-          </div>
-          <button 
-            type="button" 
-            class="btn btn-sm btn-outline" 
+          </h1>
+          <button
+            type="button"
+            class="btn btn-sm btn-dashed btn-primary"
             onClick={toggleVideoVisibility}
           >
             {video.isVisible ? (

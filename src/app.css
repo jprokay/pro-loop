@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@plugin "daisyui" {
+  themes: garden --default, synthwave --prefersdark;
+}
+
 :root {
   --background-rgb: 214, 219, 220;
   --foreground-rgb: 0, 0, 0;
