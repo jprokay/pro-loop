@@ -9,7 +9,7 @@ export default function Nav() {
       <div class="navbar-start">
       </div>
       <div class="navbar-center">
-        <a class="btn btn-ghost text-3xl font-mono" href="/">PRO-RPTR</a>
+        <a class="btn btn-ghost text-3xl font-mono" href="/">PRO-L00P</a>
       </div>
       <div class="navbar-end">
       </div>
