@@ -275,11 +275,11 @@ const Player: Component<Props> = (props) => {
     console.log("formData: ", formData)
     const id = formData.get("loopId")
     const videoId = formData.get("videoId") || video.videoId
-    const startSecond = formData.get("startSecond") || 0
+    const startSecond = formData.get("startSeconds") || video.start.second
     const loopName = formData.get("loopName") || "Loop"
-    const startMinute = formData.get("startMinute") || 0
-    const endSecond = formData.get("endSecond") || video.end.second
-    const endMinute = formData.get("endMinute") || video.end.minute
+    const startMinute = formData.get("startMinutes") || video.start.minute
+    const endSecond = formData.get("endSeconds") || video.end.second
+    const endMinute = formData.get("endMinutes") || video.end.minute
 
     if (props.loopId) {
       updateLoop(props.loopId, { videoId, startSecond, startMinute, endSecond, endMinute, loopName })
