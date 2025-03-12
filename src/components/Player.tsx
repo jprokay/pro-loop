@@ -13,6 +13,7 @@ import { type YouTubePlayer as YTPlayer } from "youtube-player/dist/types";
 import { createStore, produce } from "solid-js/store"
 import { Notification, useNotification } from "~/components/Notification";
 import { debounce } from "@solid-primitives/scheduled";
+import { addLoop, updateLoop } from "~/db/tables/loop";
 
 type Props = {
   enableSave: boolean
@@ -22,7 +23,7 @@ type Props = {
   startSecond: number
   endMinute: number
   endSecond: number
-  loopId?: string
+  loopId?: number
   loopName?: string
 }
 
@@ -267,12 +268,24 @@ const Player: Component<Props> = (props) => {
 
   async function submitForm(e: Event): Promise<void> {
     e.preventDefault();
+    console.log("event: ", e)
     const form = e.target as HTMLFormElement;
 
     const formData = new FormData(form);
-
+    console.log("formData: ", formData)
     const id = formData.get("loopId")
+    const videoId = formData.get("videoId") || video.videoId
+    const startSecond = formData.get("startSecond") || 0
+    const loopName = formData.get("loopName") || "Loop"
+    const startMinute = formData.get("startMinute") || 0
+    const endSecond = formData.get("endSecond") || video.end.second
+    const endMinute = formData.get("endMinute") || video.end.minute
 
+    if (props.loopId) {
+      updateLoop(props.loopId, { videoId, startSecond, startMinute, endSecond, endMinute, loopName })
+    }
+
+    addLoop({ videoId, startSecond, startMinute, endSecond, endMinute, loopName })
   }
 
   return (
@@ -375,7 +388,7 @@ const Player: Component<Props> = (props) => {
                 onInput={(e) => debouncedChangeStartSecond(e)}
               />
 
-              <div class="validator-hint hidden">Value must be greater than or equal to 0</div>
+              <div class="validator-hint hidden">Value must between 0 - 59</div>
             </div>
 
             <button type="button" class="btn btn-accent join-item w-1/5 md:w-1/5 py-3 text-base" onClick={setStartToNow}>Now</button>
@@ -458,7 +471,7 @@ const Player: Component<Props> = (props) => {
                 inputmode="numeric"
                 min={0}
                 value={video.end.minute}
-                onInput={(e) => debouncedChangeStartMinute(e)}
+                onInput={(e) => debouncedChangeEndMinute(e)}
               />
 
               <div class="validator-hint hidden">Value must be greater than or equal to 0</div>
@@ -473,10 +486,10 @@ const Player: Component<Props> = (props) => {
                 min={0}
                 max={59}
                 value={video.end.second}
-                onInput={(e) => debouncedChangeStartSecond(e)}
+                onInput={(e) => debouncedChangeEndSecond(e)}
               />
 
-              <div class="validator-hint hidden">Value must be greater than or equal to 0</div>
+              <div class="validator-hint hidden">Value must between 0 - 59</div>
             </div>
 
             <button type="button" class="btn btn-accent join-item w-1/5 md:w-1/5 py-3 text-base" onClick={setEndToNow}>Now</button>
