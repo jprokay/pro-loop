@@ -12,7 +12,7 @@
 	"pages_build_output_dir": "./dist",
 	"observability": {
 		"enabled": true
-	}
+	},
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
@@ -25,8 +25,13 @@
 	 * databases, object storage, AI inference, real-time communication and more.
 	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
 	 */
-
-	/**
+	"kv_namespaces": [
+    {
+      "binding": "LOOPS",
+      "id": "3fe99a353976445086065884ed14d845"
+    }
+  ],
+		/**
 	 * Environment Variables
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
 	 */

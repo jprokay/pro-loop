@@ -272,7 +272,7 @@ const Player: Component<Props> = (props) => {
     const form = e.target as HTMLFormElement;
 
     const formData = new FormData(form);
-    console.log("formData: ", formData)
+    console.log("formData: ", formData.get("videoId") as string)
     const id = formData.get("loopId")
     const videoId = formData.get("videoId") || video.videoId
     const startSecond = formData.get("startSeconds") || video.start.second
@@ -285,7 +285,8 @@ const Player: Component<Props> = (props) => {
       updateLoop(props.loopId, { videoId, startSecond, startMinute, endSecond, endMinute, loopName })
     }
 
-    addLoop({ videoId, startSecond, startMinute, endSecond, endMinute, loopName })
+    console.log("Adding loop")
+    addLoop({ videoId, startSecond, startMinute, endSecond, endMinute, loopName }).catch((err) => console.error(err))
   }
 
   return (
@@ -333,7 +334,7 @@ const Player: Component<Props> = (props) => {
           <div class="join w-full flex flex-wrap md:flex-nowrap">
             <div class="join-item w-full md:w-4/5">
               <input
-                class="input validator w-full"
+                class="input w-full"
                 type="url"
                 name="videoUrl"
                 inputmode="url"
@@ -364,7 +365,7 @@ const Player: Component<Props> = (props) => {
             <div class="join-item w-2/5 md:w-[40%]">
               <input
                 type="number"
-                class="input validator w-full"
+                class="input w-full"
                 name="startMinutes"
                 required={true}
                 inputmode="numeric"
@@ -378,7 +379,7 @@ const Player: Component<Props> = (props) => {
             <div class="join-item w-2/5 md:w-[40%]">
               <input
                 type="number"
-                class="input validator w-full"
+                class="input w-full"
                 name="startSeconds"
                 inputmode="numeric"
                 required={true}
@@ -465,7 +466,7 @@ const Player: Component<Props> = (props) => {
             <div class="join-item w-2/5 md:w-[40%]">
               <input
                 type="number"
-                class="input validator w-full"
+                class="input w-full"
                 name="endMinutes"
                 required={true}
                 inputmode="numeric"
@@ -479,7 +480,7 @@ const Player: Component<Props> = (props) => {
             <div class="join-item w-2/5 md:w-[40%]">
               <input
                 type="number"
-                class="input validator w-full"
+                class="input w-full"
                 name="endSeconds"
                 inputmode="numeric"
                 required={true}
