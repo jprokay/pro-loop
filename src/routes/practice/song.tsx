@@ -1,17 +1,57 @@
-import { useParams, useSearchParams } from "@solidjs/router"
-import { liveQuery } from "dexie"
-import { Show, Suspense, createEffect, from, onMount } from "solid-js"
-import Player from "~/components/Player"
-import { db } from "~/db/db"
+import { useParams, useSearchParams } from "@solidjs/router";
+import { createEffect, createMemo, createSignal, onCleanup, onMount } from "solid-js";
+import Player from "~/components/Player";
 
-const DEFAULT_URL = 'https://youtube.com/watch?v=nN120kCiVyQ'
+const DEFAULT_URL = 'https://youtube.com/watch?v=nN120kCiVyQ';
+
 export default function PracticePage() {
-  const [search] = useSearchParams()
+  const [search] = useSearchParams();
+  const [isLoaded, setIsLoaded] = createSignal(false);
+  
+  // Create stable props for the Player component
+  const videoUrl = createMemo(() => String(search.videoId) || DEFAULT_URL);
+  const startMinute = createMemo(() => Number(search.startMinute) || 0);
+  const startSecond = createMemo(() => Number(search.startSecond) || 0);
+  const endMinute = createMemo(() => Number(search.endMinute) || 0);
+  const endSecond = createMemo(() => Number(search.endSecond) || 0);
+  
+  onMount(() => {
+    console.log("Component mounted with startMinute:", search.startMinute);
+    setIsLoaded(true);
+    
+    // For debugging
+    console.log("Search params:", {
+      videoId: search.videoId,
+      startMinute: search.startMinute,
+      startSecond: search.startSecond,
+      endMinute: search.endMinute,
+      endSecond: search.endSecond
+    });
+  });
+  
+  createEffect(() => {
+    if (isLoaded()) {
+      console.log("Player should be visible now");
+    }
+  });
 
-  onMount(() => console.log(search.startMinute))
   return (
     <div class="w-full max-w-4xl">
-      <Player fallback={<p>Foo</p>} videoUrl={String(search.videoId) || DEFAULT_URL} enableSave={true} startMinute={Number(search.startMinute) || 0} startSecond={Number(search.startSecond) || 0} endMinute={Number(search.endMinute) || 0} endSecond={Number(search.endSecond) || 0} />
+      <div>
+        {isLoaded() ? (
+          <Player 
+            fallback={<p>Loading player...</p>} 
+            videoUrl={videoUrl()} 
+            enableSave={true} 
+            startMinute={startMinute()} 
+            startSecond={startSecond()} 
+            endMinute={endMinute()} 
+            endSecond={endSecond()} 
+          />
+        ) : (
+          <p>Initializing player...</p>
+        )}
+      </div>
     </div>
-  )
+  );
 }
