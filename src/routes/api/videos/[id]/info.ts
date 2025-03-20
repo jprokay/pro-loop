@@ -11,6 +11,8 @@ function videoInfoKey(videoId: string): string {
 }
 
 export async function GET(event: APIEvent) {
+  "use server";
+
   // Apply rate limiting - 100 requests per hour per client
   const rateLimitResponse = await rateLimit(event, {
     limit: 100,
