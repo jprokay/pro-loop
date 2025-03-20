@@ -1,5 +1,6 @@
 import { storage } from "~/kv";
 import type { APIEvent } from "@solidjs/start/server";
+import SuperJSON from "superjson";
 
 type RateLimitOptions = {
   /**
@@ -60,38 +61,43 @@ export async function checkRateLimit(
 
   // Get current count from KV
   const data = await storage.get(key);
+  console.log("Rate limit: ", data);
   const now = Math.floor(Date.now() / 1000);
 
   let count = 0;
   let resetTime = now + options.windowInSeconds;
+  try {
+    if (data) {
+      console.log("Checking data");
+      const rateData = SuperJSON.parse(data);
+      count = rateData.count;
+      resetTime = rateData.reset;
 
-  if (data) {
-    const rateData = JSON.parse(data.toString());
-    count = rateData.count;
-    resetTime = rateData.reset;
-
-    // If the window has expired, reset the counter
-    if (now >= resetTime) {
-      count = 0;
-      resetTime = now + options.windowInSeconds;
+      // If the window has expired, reset the counter
+      if (now >= resetTime) {
+        count = 0;
+        resetTime = now + options.windowInSeconds;
+      }
     }
+  } catch (error) {
+    console.warn("Error in rate limiter", error);
+  } finally {
+    // Increment the counter
+    count++;
+
+    // Store updated count in KV
+    await storage.set(key, SuperJSON.stringify({ count, reset: resetTime }), {
+      expirationTtl: options.windowInSeconds,
+    });
+
+    const remaining = Math.max(0, options.limit - count);
+
+    return {
+      allowed: count <= options.limit,
+      remaining,
+      reset: resetTime,
+    };
   }
-
-  // Increment the counter
-  count++;
-
-  // Store updated count in KV
-  await storage.set(key, JSON.stringify({ count, reset: resetTime }), {
-    expirationTtl: options.windowInSeconds,
-  });
-
-  const remaining = Math.max(0, options.limit - count);
-
-  return {
-    allowed: count <= options.limit,
-    remaining,
-    reset: resetTime,
-  };
 }
 
 /**
@@ -104,6 +110,7 @@ export async function rateLimit(
   const result = await checkRateLimit(event, options);
 
   if (!result.allowed) {
+    console.log("blocking request");
     return new Response(
       JSON.stringify({
         error: "Too many requests",
