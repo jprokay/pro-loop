@@ -103,6 +103,17 @@ const Player: Component<Props> = (props) => {
   const { show: showNotification, setShow: setShowNotification, notification, setNotification } = useNotification()
 
   onMount(() => {
+    // Add meta tag to prevent zooming on input focus for mobile devices
+    const metaViewport = document.querySelector('meta[name="viewport"]');
+    if (metaViewport) {
+      metaViewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1');
+    } else {
+      const newMeta = document.createElement('meta');
+      newMeta.name = 'viewport';
+      newMeta.content = 'width=device-width, initial-scale=1, maximum-scale=1';
+      document.head.appendChild(newMeta);
+    }
+
     const startSec = Number(props.startMinute || 0) * 60 + Number(props.startSecond || 0)
 
     const ytPlayer = YouTubePlayer("player", {
@@ -119,6 +130,14 @@ const Player: Component<Props> = (props) => {
     setPlayer(ytPlayer);
 
     // Get video title
+  });
+
+  onCleanup(() => {
+    // Restore original viewport meta tag when component unmounts
+    const metaViewport = document.querySelector('meta[name="viewport"]');
+    if (metaViewport) {
+      metaViewport.setAttribute('content', 'width=device-width, initial-scale=1');
+    }
   });
 
   onMount(async () => {
@@ -446,6 +465,9 @@ const Player: Component<Props> = (props) => {
                 min={0}
                 value={video.start.minute}
                 onInput={(e) => debouncedChangeStartMinute(e)}
+                onFocus={(e) => e.target.setAttribute('readonly', 'readonly')}
+                onTouchStart={(e) => e.target.removeAttribute('readonly')}
+                onBlur={(e) => e.target.removeAttribute('readonly')}
               />
 
               <div class="validator-hint hidden">Value must be greater than or equal to 0</div>
@@ -461,6 +483,9 @@ const Player: Component<Props> = (props) => {
                 max={59}
                 value={video.start.second}
                 onInput={(e) => debouncedChangeStartSecond(e)}
+                onFocus={(e) => e.target.setAttribute('readonly', 'readonly')}
+                onTouchStart={(e) => e.target.removeAttribute('readonly')}
+                onBlur={(e) => e.target.removeAttribute('readonly')}
               />
 
               <div class="validator-hint hidden">Value must between 0 - 59</div>
@@ -555,6 +580,9 @@ const Player: Component<Props> = (props) => {
                 min={0}
                 value={video.end.minute}
                 onInput={(e) => debouncedChangeEndMinute(e)}
+                onFocus={(e) => e.target.setAttribute('readonly', 'readonly')}
+                onTouchStart={(e) => e.target.removeAttribute('readonly')}
+                onBlur={(e) => e.target.removeAttribute('readonly')}
               />
 
               <div class="validator-hint hidden">Value must be greater than or equal to 0</div>
@@ -570,6 +598,9 @@ const Player: Component<Props> = (props) => {
                 max={59}
                 value={video.end.second}
                 onInput={(e) => debouncedChangeEndSecond(e)}
+                onFocus={(e) => e.target.setAttribute('readonly', 'readonly')}
+                onTouchStart={(e) => e.target.removeAttribute('readonly')}
+                onBlur={(e) => e.target.removeAttribute('readonly')}
               />
 
               <div class="validator-hint hidden">Value must between 0 - 59</div>
