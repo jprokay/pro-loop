@@ -1,5 +1,6 @@
 import type { APIEvent } from "@solidjs/start/server";
 import { storage } from "~/kv";
+import { rateLimit } from "~/utils/rate-limiter";
 
 const API_KEY = process.env.GOOGLE_API_KEY;
 const CACHE_TTL = 60 * 60 * 24 * 7; // 1 week in seconds
@@ -9,6 +10,18 @@ function videoInfoKey(videoId: string): string {
 }
 
 export async function GET(event: APIEvent) {
+  // Apply rate limiting - 100 requests per hour per client
+  const rateLimitResponse = await rateLimit(event, {
+    limit: 100,
+    windowInSeconds: 60 * 60, // 1 hour
+    identifier: 'youtube-video-info'
+  });
+  
+  // If rate limited, return the response
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+  
   const videoId = event.params.id;
 
   // Try to get from cache first
