@@ -144,13 +144,27 @@ const Player: Component<Props> = (props) => {
     const videoId = parseUrl(props.videoUrl)
 
     if (props.videoName === undefined || props.videoName === "undefined" || props.videoName === "null") {
-
-      const data = await fetch(`/api/videos/${videoId}/info`, { headers: { "Accept": "application/json" } })
-
       try {
-        const parsed = await data.json()
-        setVideo(produce((v) => v.title = parsed.snippet.title))
-      } catch {
+        const response = await fetch(`/api/videos/${videoId}/info`, { 
+          headers: { 
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const parsed = await response.json();
+        if (parsed && parsed.snippet && parsed.snippet.title) {
+          setVideo(produce((v) => v.title = parsed.snippet.title));
+        } else {
+          console.warn("Video info response missing expected data structure:", parsed);
+        }
+      } catch (error) {
+        console.error("Error fetching video info:", error);
+        setVideo(produce((v) => v.title = "Unknown Title"));
       }
     }
   })
@@ -164,11 +178,29 @@ const Player: Component<Props> = (props) => {
 
     player()?.loadVideoById(videoId, 0);
     let videoTitle = { snippet: { title: '---' } }
+    
     try {
-      const data = await fetch(`/api/videos/${videoId}/info`, { headers: { "Accept": "application/json" } })
-
-      videoTitle = await data.json()
-    } catch { }
+      const response = await fetch(`/api/videos/${videoId}/info`, { 
+        headers: { 
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      
+      videoTitle = await response.json();
+      
+      if (!videoTitle || !videoTitle.snippet || !videoTitle.snippet.title) {
+        console.warn("Invalid video info response:", videoTitle);
+        videoTitle = { snippet: { title: 'Unknown Title' } };
+      }
+    } catch (error) {
+      console.error("Error fetching video info:", error);
+      videoTitle = { snippet: { title: 'Error Loading Title' } };
+    }
 
     setVideo(produce((v) => {
       v.start = {
@@ -182,9 +214,8 @@ const Player: Component<Props> = (props) => {
       v.duration = 0
       v.videoId = videoId
       v.videoUrl = url
-      v.title = videoTitle.snippet.title // Reset title until new one is loaded
+      v.title = videoTitle.snippet.title
     }))
-
   }
 
   const timer = setInterval(() => {
