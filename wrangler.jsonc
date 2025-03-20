@@ -26,11 +26,11 @@
 	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
 	 */
 	"kv_namespaces": [
-    {
-      "binding": "LOOPS",
-      "id": "3fe99a353976445086065884ed14d845"
-    }
-  ],
+		{
+			"binding": "LOOPS",
+			"id": "3fe99a353976445086065884ed14d845"
+		}
+	]
 		/**
 	 * Environment Variables
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
