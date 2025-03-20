@@ -70,7 +70,7 @@ const Player: Component<Props> = (props) => {
     }
   `;
   document.head.appendChild(styleElement);
-  
+
   // Clean up the style element when component unmounts
   onCleanup(() => {
     document.head.removeChild(styleElement);
@@ -147,8 +147,11 @@ const Player: Component<Props> = (props) => {
 
       const data = await fetch(`/api/videos/${videoId}/info`)
 
-      const parsed = await data.json()
-      setVideo(produce((v) => v.title = parsed.snippet.title))
+      try {
+        const parsed = await data.json()
+        setVideo(produce((v) => v.title = parsed.snippet.title))
+      } catch {
+      }
     }
   })
 
@@ -158,9 +161,15 @@ const Player: Component<Props> = (props) => {
     if (!videoId) {
       return
     }
+
     player()?.loadVideoById(videoId, 0);
-    const data = await fetch(`/api/videos/${videoId}/info`)
-    const parsed = await data.json()
+    let videoTitle = { snippet: { title: '---' } }
+    try {
+      const data = await fetch(`/api/videos/${videoId}/info`)
+
+      videoTitle = await data.json()
+    } catch { }
+
     setVideo(produce((v) => {
       v.start = {
         second: 0,
@@ -173,7 +182,7 @@ const Player: Component<Props> = (props) => {
       v.duration = 0
       v.videoId = videoId
       v.videoUrl = url
-      v.title = parsed.snippet.title // Reset title until new one is loaded
+      v.title = videoTitle.snippet.title // Reset title until new one is loaded
     }))
 
   }
@@ -324,10 +333,10 @@ const Player: Component<Props> = (props) => {
     e.preventDefault();
     setSaving(true);
     setSaveSuccess(false);
-    
+
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    
+
     const id = formData.get("loopId")
     const videoId = formData.get("videoId") || video.videoId
     const startSecond = formData.get("startSeconds") || video.start.second
@@ -343,9 +352,9 @@ const Player: Component<Props> = (props) => {
       } else {
         await addLoop({ videoId, startSecond, startMinute, endSecond, endMinute, loopName, videoName });
       }
-      
+
       const loopx = await db.loops.toArray();
-      
+
       if (props.userId) {
         await fetch(`/api/users/${props.userId}/loops`, {
           method: "POST",
@@ -355,7 +364,7 @@ const Player: Component<Props> = (props) => {
           }
         });
       }
-      
+
       // Show success state
       setSaveSuccess(true);
       setNotification({
@@ -363,13 +372,13 @@ const Player: Component<Props> = (props) => {
         content: `Loop "${loopName}" saved successfully!`
       });
       setShowNotification(true);
-      
+
       // Hide success after delay
       setTimeout(() => {
         setSaveSuccess(false);
         setShowNotification(false);
       }, 3000);
-      
+
     } catch (err) {
       console.error(err);
       setNotification({
@@ -552,12 +561,12 @@ const Player: Component<Props> = (props) => {
               type="button"
               onClick={() => setVideo("loop", (loop) => !loop)}
             >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke-width="1.5" 
-                stroke="currentColor" 
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
                 class={`size-6 ${video.loop ? 'animate-spin-slow' : ''}`}
                 style={video.loop ? "animation: spin 1s linear infinite;" : ""}
               >
@@ -647,8 +656,8 @@ const Player: Component<Props> = (props) => {
         <Show when={props.enableSave} fallback={props.fallback}>
           <div class="flex justify-center gap-4 mt-6">
             <Show when={props.loopId}>
-              <button 
-                class="btn btn-outline py-4 px-8 text-lg" 
+              <button
+                class="btn btn-outline py-4 px-8 text-lg"
                 type="submit"
                 disabled={saving()}
               >
@@ -658,13 +667,13 @@ const Player: Component<Props> = (props) => {
                 </Show>
               </button>
             </Show>
-            <button 
-              class={`btn py-4 px-8 text-lg ${saveSuccess() ? 'btn-success' : 'btn-primary'}`} 
+            <button
+              class={`btn py-4 px-8 text-lg ${saveSuccess() ? 'btn-success' : 'btn-primary'}`}
               type="submit"
               disabled={saving()}
             >
-              <Show 
-                when={saving()} 
+              <Show
+                when={saving()}
                 fallback={
                   <Show when={saveSuccess()} fallback="Save">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
