@@ -145,7 +145,7 @@ const Player: Component<Props> = (props) => {
 
     if (props.videoName === undefined || props.videoName === "undefined" || props.videoName === "null") {
 
-      const data = await fetch(`/api/videos/${videoId}/info`)
+      const data = await fetch(`/api/videos/${videoId}/info`, { headers: { "Accept": "application/json" } })
 
       try {
         const parsed = await data.json()
@@ -165,7 +165,7 @@ const Player: Component<Props> = (props) => {
     player()?.loadVideoById(videoId, 0);
     let videoTitle = { snippet: { title: '---' } }
     try {
-      const data = await fetch(`/api/videos/${videoId}/info`)
+      const data = await fetch(`/api/videos/${videoId}/info`, { headers: { "Accept": "application/json" } })
 
       videoTitle = await data.json()
     } catch { }
