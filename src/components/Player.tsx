@@ -14,6 +14,8 @@ import { createStore, produce } from "solid-js/store"
 import { Notification, useNotification } from "~/components/Notification";
 import { debounce } from "@solid-primitives/scheduled";
 import { addLoop, updateLoop } from "~/db/tables/loop";
+import { db } from "~/db/db"
+import SuperJSON from "superjson";
 
 type Props = {
   enableSave: boolean
@@ -25,6 +27,8 @@ type Props = {
   endSecond: number
   loopId?: number
   loopName?: string
+  userId?: string
+  videoName?: string
 }
 
 function parseBrowserBarUrl(url: string): string | undefined {
@@ -52,7 +56,6 @@ function parseUrl(url: string): string {
   return parseBrowserBarUrl(url) || parseShareUrl(url) || url
 }
 
-const DEFAULT_URL = 'https://youtube.com/watch?v=nN120kCiVyQ'
 
 const Player: Component<Props> = (props) => {
   const [player, setPlayer] = createSignal<YTPlayer>();
@@ -74,7 +77,7 @@ const Player: Component<Props> = (props) => {
     playbackRate: 1.0,
     duration: 0,
     name: undefined,
-    title: "Boys",
+    title: props.videoName,
     isVisible: true
   });
 
@@ -99,14 +102,27 @@ const Player: Component<Props> = (props) => {
     // Get video title
   });
 
-  function changeVideo(url: string) {
+  onMount(async () => {
+    const videoId = parseUrl(props.videoUrl)
+
+    if (props.videoName === undefined || props.videoName === "undefined" || props.videoName === "null") {
+
+      const data = await fetch(`/api/videos/${videoId}/info`)
+
+      const parsed = await data.json()
+      setVideo(produce((v) => v.title = parsed.snippet.title))
+    }
+  })
+
+  async function changeVideo(url: string) {
     const videoId = parseUrl(url)
 
     if (!videoId) {
       return
     }
     player()?.loadVideoById(videoId, 0);
-
+    const data = await fetch(`/api/videos/${videoId}/info`)
+    const parsed = await data.json()
     setVideo(produce((v) => {
       v.start = {
         second: 0,
@@ -119,7 +135,7 @@ const Player: Component<Props> = (props) => {
       v.duration = 0
       v.videoId = videoId
       v.videoUrl = url
-      v.title = "" // Reset title until new one is loaded
+      v.title = parsed.snippet.title // Reset title until new one is loaded
     }))
 
   }
@@ -277,16 +293,28 @@ const Player: Component<Props> = (props) => {
     const videoId = formData.get("videoId") || video.videoId
     const startSecond = formData.get("startSeconds") || video.start.second
     const loopName = formData.get("loopName") || "Loop"
+    const videoName = video.title
     const startMinute = formData.get("startMinutes") || video.start.minute
     const endSecond = formData.get("endSeconds") || video.end.second
     const endMinute = formData.get("endMinutes") || video.end.minute
 
     if (props.loopId) {
-      updateLoop(props.loopId, { videoId, startSecond, startMinute, endSecond, endMinute, loopName })
+      updateLoop(props.loopId, { videoId, startSecond, startMinute, endSecond, endMinute, loopName, videoName })
     }
 
-    console.log("Adding loop")
-    addLoop({ videoId, startSecond, startMinute, endSecond, endMinute, loopName }).catch((err) => console.error(err))
+    addLoop({ videoId, startSecond, startMinute, endSecond, endMinute, loopName, videoName })
+      .then(() => db.loops.toArray())
+      .then((loopx) => {
+        if (props.userId) {
+          fetch(`/api/users/${props.userId}/loops`, {
+            method: "POST",
+            body: SuperJSON.stringify({ "loops": loopx }),
+            headers: {
+              "Content-Type": "application/json"
+            }
+          })
+        }
+      }).catch((err) => console.error(err))
   }
 
   return (
