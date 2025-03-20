@@ -3,6 +3,7 @@ import { liveQuery } from "dexie"
 import { For, from, lazy, Show, Suspense } from "solid-js"
 import { LoopCard } from "~/components/LoopCard"
 import { db } from "~/db/db"
+import CassetteTapeLoader from "~/components/CassetteTapeLoader"
 const LazyPlayer = lazy(() => import("~/components/Player"))
 const DEFAULT_URL = 'https://youtube.com/watch?v=nN120kCiVyQ'
 
@@ -16,12 +17,8 @@ const Player = () => {
 }
 const Loader = () => {
   return (
-    <div class="flex items-center">
-      <span class="loading loading-ring loading-xs"></span>
-      <span class="loading loading-ring loading-sm"></span>
-      <span class="loading loading-ring loading-md"></span>
-      <span class="loading loading-ring loading-lg"></span>
-      <span class="loading loading-ring loading-xl"></span>
+    <div class="flex justify-center items-center w-full h-64">
+      <CassetteTapeLoader />
     </div>
   )
 }

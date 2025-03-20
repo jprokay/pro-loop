@@ -48,7 +48,7 @@ export default function Nav() {
         <a class="btn btn-ghost text-3xl font-mono" href="/">PRO-L00P</a>
       </div>
       <div class="navbar-end">
-        <Show when={clerk.latest && clerk().user} fallback={<button class="btn-primary" onClick={() => modalRef?.showModal()}>Sign In</button>}>
+        <Show when={clerk.latest && clerk().user} fallback={<button class="btn btn-primary cursor-pointer" onClick={() => modalRef?.showModal()}>Sign In</button>}>
           <div ref={userButtonRef} id="user-button"></div>
         </Show>
       </div>
