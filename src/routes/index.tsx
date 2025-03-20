@@ -31,7 +31,7 @@ export default function PracticePage() {
   return (
     <div class="w-full min-w-full py-8 px-8 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 bg-base-300">
       <For each={loops()} fallback={<Loader />}>
-        {(loop) => <LoopCard videoId={loop.videoId} loopName={loop.loopName} loopImage={{ alt: "foo", src: "" }} songName="Boys Are Back in Town" />}
+        {(loop) => <LoopCard starting={{ second: loop.startSecond, minute: loop.startMinute }} ending={{ second: loop.endSecond, minute: loop.endMinute }} videoId={loop.videoId} loopName={loop.loopName} loopImage={{ alt: "foo", src: "" }} songName={loop.videoName || "---"} />}
       </For>
     </div>
   )
