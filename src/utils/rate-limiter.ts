@@ -69,7 +69,7 @@ export async function checkRateLimit(
   try {
     if (data) {
       console.log("Checking data");
-      const rateData = SuperJSON.parse(data);
+      const rateData = SuperJSON.parse(data as string);
       count = rateData.count;
       resetTime = rateData.reset;
 
@@ -86,9 +86,13 @@ export async function checkRateLimit(
     count++;
 
     // Store updated count in KV
-    await storage.set(key, SuperJSON.stringify({ count, reset: resetTime }), {
-      expirationTtl: options.windowInSeconds,
-    });
+    await storage.set(
+      key,
+      { count, reset: resetTime },
+      {
+        expirationTtl: options.windowInSeconds,
+      },
+    );
 
     const remaining = Math.max(0, options.limit - count);
 
@@ -110,7 +114,6 @@ export async function rateLimit(
   const result = await checkRateLimit(event, options);
 
   if (!result.allowed) {
-    console.log("blocking request");
     return new Response(
       JSON.stringify({
         error: "Too many requests",

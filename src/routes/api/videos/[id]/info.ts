@@ -34,12 +34,14 @@ export async function GET(event: APIEvent) {
     const cachedData = await storage.get(videoInfoKey(videoId));
     if (cachedData) {
       console.log(`Cache hit for video ${videoId}`);
-      return SuperJSON.parse(cachedData.toString());
+      return new Response(SuperJSON.stringify(cachedData), {
+        status: 200,
+      });
     }
   } catch {
     console.log(`Cache miss for video ${videoId}, fetching from YouTube API`);
     // If not in cache, fetch from YouTube API
-    const info = await fetch(
+    const info = await event.request.fetcher.fetch(
       `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${API_KEY}&fields=items(id,snippet(channelId,title,categoryId),statistics)&part=snippet,statistics`,
     );
     console.log("fetching: ", info);
@@ -49,11 +51,11 @@ export async function GET(event: APIEvent) {
 
     if (videoInfo) {
       // Store in cache for future requests
-      await storage.set(videoInfoKey(videoId), SuperJSON.stringify(videoInfo), {
+      await storage.set(videoInfoKey(videoId), videoInfo, {
         expirationTtl: CACHE_TTL,
       });
     }
 
-    return videoInfo;
+    return new Response(SuperJSON.stringify(videoInfo), { status: 200 });
   }
 }
