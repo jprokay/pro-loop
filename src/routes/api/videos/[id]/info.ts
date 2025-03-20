@@ -10,14 +10,14 @@ function videoInfoKey(videoId: string): string {
 
 export async function GET(event: APIEvent) {
   const videoId = event.params.id;
-  
+
   // Try to get from cache first
   const cachedData = await storage.get(videoInfoKey(videoId));
   if (cachedData) {
     console.log(`Cache hit for video ${videoId}`);
     return JSON.parse(cachedData.toString());
   }
-  
+
   console.log(`Cache miss for video ${videoId}, fetching from YouTube API`);
   // If not in cache, fetch from YouTube API
   const info = await fetch(
@@ -25,13 +25,13 @@ export async function GET(event: APIEvent) {
   );
   const data = await info.json();
   const videoInfo = data.items[0];
-  
+
   if (videoInfo) {
     // Store in cache for future requests
-    await storage.put(videoInfoKey(videoId), JSON.stringify(videoInfo), {
-      expirationTtl: CACHE_TTL
+    await storage.set(videoInfoKey(videoId), JSON.stringify(videoInfo), {
+      expirationTtl: CACHE_TTL,
     });
   }
-  
+
   return videoInfo;
 }
