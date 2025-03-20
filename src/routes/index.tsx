@@ -25,6 +25,7 @@ const Loader = () => {
 export default function PracticePage() {
   const loopsObservable = liveQuery(() => db.loops.toArray())
   const loops = from(loopsObservable)
+  return <Loader />
   return (
     <div class="w-full min-w-full py-8 px-8 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 bg-base-300">
       <For each={loops()} fallback={<Loader />}>
