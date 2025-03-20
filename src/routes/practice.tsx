@@ -1,4 +1,5 @@
 import { RouteSectionProps } from "@solidjs/router";
+import { onMount } from "solid-js/types/server/reactive.js";
 
 export default function PracticeLayout(props: RouteSectionProps) {
   return (

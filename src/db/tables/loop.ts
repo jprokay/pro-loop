@@ -9,6 +9,7 @@ export default class Loops extends Entity<AppDB> {
   endMinute!: number;
   endSecond!: number;
   loopName!: string;
+  videoName!: string;
 }
 
 type AddLoopProps = {
@@ -18,6 +19,7 @@ type AddLoopProps = {
   endMinute: number;
   endSecond: number;
   videoId: string;
+  videoName: string;
 };
 
 export async function addLoop(props: AddLoopProps) {

@@ -1,3 +1,4 @@
+import { A } from "@solidjs/router";
 import { Component, Show, createEffect, onMount, useContext } from "solid-js";
 import { Portal } from "solid-js/web";
 import { useAuthContext } from "~/context/auth-context";
@@ -38,14 +39,10 @@ export default function Nav() {
     }
   })
 
-  createEffect(() => {
-    if (clerk.latest && clerk().user) {
-      fetch(`/api/users/${clerk().user.id}/helloworld`)
-    }
-  })
   return (
     <nav class="navbar bg-neutral shadow-sm">
       <div class="navbar-start">
+        <A href="/practice/song">New Loop</A>
       </div>
       <div class="navbar-center">
         <a class="btn btn-ghost text-3xl font-mono" href="/">PRO-L00P</a>
@@ -56,7 +53,7 @@ export default function Nav() {
         </Show>
       </div>
       <Portal>
-        <SignInModal ref={modalRef} id="foo" />
+        <SignInModal ref={modalRef!} id="foo" />
       </Portal>
     </nav>
   );
