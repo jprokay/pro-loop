@@ -17,7 +17,7 @@ const Player = () => {
 }
 const Loader = () => {
   return (
-    <div class="flex justify-center items-center w-full h-64">
+    <div class="flex justify-center items-center w-full h-screen">
       <CassetteTapeLoader />
     </div>
   )
