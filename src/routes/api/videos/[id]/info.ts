@@ -32,7 +32,7 @@ export async function GET(event: APIEvent) {
     const cachedData = await storage.get(videoInfoKey(videoId));
     if (cachedData) {
       console.log(`Cache hit for video ${videoId}`);
-      return new Response(SuperJSON.stringify(cachedData), {
+      return new Response(JSON.stringify(cachedData), {
         status: 200,
       });
     }
@@ -57,7 +57,7 @@ export async function GET(event: APIEvent) {
         });
       }
 
-      return new Response(SuperJSON.stringify(videoInfo), { status: 200 });
+      return new Response(JSON.stringify(videoInfo), { status: 200 });
     } else {
       return new Response(undefined, { status: 400 });
     }

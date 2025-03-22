@@ -191,7 +191,7 @@ const Player: Component<Props> = (props) => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      videoTitle = SuperJSON.parse(await response.text());
+      videoTitle = await response.json();
 
       if (!videoTitle || !videoTitle.snippet || !videoTitle.snippet.title) {
         console.warn("Invalid video info response:", videoTitle);
