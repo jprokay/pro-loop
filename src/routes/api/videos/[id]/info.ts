@@ -11,8 +11,6 @@ function videoInfoKey(videoId: string): string {
 }
 
 export async function GET(event: APIEvent) {
-  "use server";
-
   // Apply rate limiting - 100 requests per hour per client
   const rateLimitResponse = await rateLimit(event, {
     limit: 100,
@@ -40,6 +38,7 @@ export async function GET(event: APIEvent) {
     }
   } catch {
     console.log(`Cache miss for video ${videoId}, fetching from YouTube API`);
+  } finally {
     // If not in cache, fetch from YouTube API
     const info = await event.request.fetcher.fetch(
       `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${API_KEY}&fields=items(id,snippet(channelId,title,categoryId),statistics)&part=snippet,statistics`,
