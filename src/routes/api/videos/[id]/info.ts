@@ -3,7 +3,6 @@ import SuperJSON from "superjson";
 import { storage } from "~/kv";
 import { rateLimit } from "~/utils/rate-limiter";
 
-const API_KEY = process.env.GOOGLE_API_KEY;
 const CACHE_TTL = 60 * 60 * 24 * 7; // 1 week in seconds
 
 function videoInfoKey(videoId: string): string {
@@ -11,6 +10,7 @@ function videoInfoKey(videoId: string): string {
 }
 
 export async function GET(event: APIEvent) {
+  const API_KEY = process.env.GOOGLE_API_KEY;
   // Apply rate limiting - 100 requests per hour per client
   const rateLimitResponse = await rateLimit(event, {
     limit: 100,
@@ -43,18 +43,23 @@ export async function GET(event: APIEvent) {
     const info = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${API_KEY}&fields=items(id,snippet(channelId,title,categoryId),statistics)&part=snippet,statistics`,
     );
-    console.log("fetching: ", info);
+    console.log("API Key: ", API_KEY);
+    console.log("fetching: ", JSON.stringify(info));
     const data = await info.json();
-    const videoInfo = data.items[0];
-    console.log("Video info: ", videoInfo);
+    if ("items" in data) {
+      const videoInfo = data.items[0];
+      console.log("Video info: ", videoInfo);
 
-    if (videoInfo) {
-      // Store in cache for future requests
-      await storage.set(videoInfoKey(videoId), videoInfo, {
-        expirationTtl: CACHE_TTL,
-      });
+      if (videoInfo) {
+        // Store in cache for future requests
+        await storage.set(videoInfoKey(videoId), videoInfo, {
+          expirationTtl: CACHE_TTL,
+        });
+      }
+
+      return new Response(SuperJSON.stringify(videoInfo), { status: 200 });
+    } else {
+      return new Response(undefined, { status: 400 });
     }
-
-    return new Response(SuperJSON.stringify(videoInfo), { status: 200 });
   }
 }
