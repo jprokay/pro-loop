@@ -145,17 +145,17 @@ const Player: Component<Props> = (props) => {
 
     if (props.videoName === undefined || props.videoName === "undefined" || props.videoName === "null") {
       try {
-        const response = await fetch(`/api/videos/${videoId}/info`, { 
-          headers: { 
+        const response = await fetch(`/api/videos/${videoId}/info`, {
+          headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
           }
         });
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        
+
         const parsed = await response.json();
         if (parsed && parsed.snippet && parsed.snippet.title) {
           setVideo(produce((v) => v.title = parsed.snippet.title));
@@ -178,21 +178,21 @@ const Player: Component<Props> = (props) => {
 
     player()?.loadVideoById(videoId, 0);
     let videoTitle = { snippet: { title: '---' } }
-    
+
     try {
-      const response = await fetch(`/api/videos/${videoId}/info`, { 
-        headers: { 
+      const response = await fetch(`/api/videos/${videoId}/info`, {
+        headers: {
           "Accept": "application/json",
           "Content-Type": "application/json"
         }
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      
-      videoTitle = await response.json();
-      
+
+      videoTitle = SuperJSON.parse(await response.text());
+
       if (!videoTitle || !videoTitle.snippet || !videoTitle.snippet.title) {
         console.warn("Invalid video info response:", videoTitle);
         videoTitle = { snippet: { title: 'Unknown Title' } };
