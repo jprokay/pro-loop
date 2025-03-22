@@ -40,7 +40,7 @@ export async function GET(event: APIEvent) {
     console.log(`Cache miss for video ${videoId}, fetching from YouTube API`);
   } finally {
     // If not in cache, fetch from YouTube API
-    const info = await event.request.fetcher.fetch(
+    const info = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${API_KEY}&fields=items(id,snippet(channelId,title,categoryId),statistics)&part=snippet,statistics`,
     );
     console.log("fetching: ", info);
