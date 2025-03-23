@@ -1,6 +1,7 @@
 import { useSearchParams } from "@solidjs/router";
-import { Suspense, createEffect, createMemo, createSignal, onMount } from "solid-js";
+import { Suspense, createMemo, createSignal } from "solid-js";
 import Player from "~/components/Player";
+import VideoSearch from "~/components/VideoSearch";
 import { useAuthContext } from "~/context/auth-context";
 
 const DEFAULT_ID = 'nN120kCiVyQ';
@@ -9,12 +10,14 @@ function videoIdToUrl(videoId: string): string {
 }
 
 export default function PracticePage() {
-  const [search] = useSearchParams();
+  const [search, setSearch] = useSearchParams();
+  const [currentVideoId, setCurrentVideoId] = createSignal(search.videoId || DEFAULT_ID);
+  const [currentVideoTitle, setCurrentVideoTitle] = createSignal(search.songName || "");
 
   const clerk = useAuthContext()
   // Create stable props for the Player component
-  const videoUrl = createMemo(() => videoIdToUrl(String(search.videoId || DEFAULT_ID)));
-  const songName = createMemo(() => search.songName ? String(search.songName) : undefined);
+  const videoUrl = createMemo(() => videoIdToUrl(String(currentVideoId())));
+  const songName = createMemo(() => currentVideoTitle() || undefined);
   const startMinute = createMemo(() => Number(search.startMinute) || 0);
   const startSecond = createMemo(() => Number(search.startSecond) || 0);
   const endMinute = createMemo(() => Number(search.endMinute) || 0);
@@ -29,9 +32,16 @@ export default function PracticePage() {
     return undefined
   })
 
+  function handleVideoSelect(videoId: string, title: string) {
+    setCurrentVideoId(videoId);
+    setCurrentVideoTitle(title);
+    setSearch({ videoId, songName: title });
+  }
 
   return (
     <div class="w-full max-w-4xl">
+      <VideoSearch onSelectVideo={handleVideoSelect} />
+      
       <div>
         <Suspense>
           <Player
