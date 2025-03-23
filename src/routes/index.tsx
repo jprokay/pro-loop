@@ -23,6 +23,7 @@ const Loader = () => {
   )
 }
 export default function PracticePage() {
+  // Add a text input that can provide filter criteria to the loops. Should search on the songName and/or the loopName AI!
   const loopsObservable = liveQuery(() => db.loops.toArray())
   const loops = from(loopsObservable)
   return (
