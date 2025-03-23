@@ -15,6 +15,8 @@ const Player = () => {
 
   )
 }
+
+// TODO: I dont like this loader at all. Can we make it a spinning spiral of various instrument and music emoji? AI!
 const Loader = () => {
   return (
     <div class="flex justify-center items-center w-full h-screen">
@@ -24,20 +26,18 @@ const Loader = () => {
 }
 export default function PracticePage() {
   const [searchQuery, setSearchQuery] = createSignal("");
-  const filteredLoops = from(liveQuery(() => {
-    const query = searchQuery().toLowerCase().trim();
-    if (!query) {
-      return db.loops.toArray();
-    }
+  const loopsObservable = liveQuery(() => db.loops.toArray())
+  const loops = from(loopsObservable)
 
-    // Use Dexie's collection.filter() to filter at the database level
-    return db.loops
-      .filter(loop =>
-      (loop.videoName?.toLowerCase().includes(query) ||
-        loop.loopName?.toLowerCase().includes(query))
-      )
-      .toArray();
-  }));
+  const filteredLoops = createMemo(() => {
+    const query = searchQuery().toLowerCase().trim();
+    if (!query) return loops();
+
+    return loops()?.filter(loop =>
+    (loop.videoName?.toLowerCase().includes(query) ||
+      loop.loopName?.toLowerCase().includes(query))
+    );
+  });
 
   return (
     <div class="w-full min-w-full py-8 px-8 bg-base-300">
