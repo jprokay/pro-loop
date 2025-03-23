@@ -1,4 +1,4 @@
-import { useParams } from "@solidjs/router"
+import { A } from "@solidjs/router"
 import { liveQuery } from "dexie"
 import { For, from, lazy, Show, Suspense, createSignal, createMemo } from "solid-js"
 import { LoopCard } from "~/components/LoopCard"
@@ -16,52 +16,11 @@ const Player = () => {
   )
 }
 
+// TODO: This Loader is nested in a grid below - how can I make it take up the full width of the grid? AI!
 const Loader = () => {
   return (
     <div class="flex justify-center items-center w-full h-screen">
-      <div class="music-spiral">
-        <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg) translateY(-50px) rotate(0deg); }
-            100% { transform: rotate(360deg) translateY(-50px) rotate(-360deg); }
-          }
-          
-          .music-spiral {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-          
-          .emoji {
-            position: absolute;
-            font-size: 2rem;
-            opacity: 0.8;
-            transform-origin: center center;
-            animation: spin 3s linear infinite;
-          }
-          
-          .emoji:nth-child(1) { animation-duration: 3s; }
-          .emoji:nth-child(2) { animation-duration: 4s; animation-delay: 0.2s; }
-          .emoji:nth-child(3) { animation-duration: 5s; animation-delay: 0.4s; }
-          .emoji:nth-child(4) { animation-duration: 6s; animation-delay: 0.6s; }
-          .emoji:nth-child(5) { animation-duration: 7s; animation-delay: 0.8s; }
-          .emoji:nth-child(6) { animation-duration: 8s; animation-delay: 1.0s; }
-          .emoji:nth-child(7) { animation-duration: 9s; animation-delay: 1.2s; }
-          .emoji:nth-child(8) { animation-duration: 10s; animation-delay: 1.4s; }
-        `}</style>
-        <div class="emoji" style="transform: rotate(0deg) translateY(-50px) rotate(0deg);">🎸</div>
-        <div class="emoji" style="transform: rotate(45deg) translateY(-50px) rotate(-45deg);">🎹</div>
-        <div class="emoji" style="transform: rotate(90deg) translateY(-50px) rotate(-90deg);">🎺</div>
-        <div class="emoji" style="transform: rotate(135deg) translateY(-50px) rotate(-135deg);">🎻</div>
-        <div class="emoji" style="transform: rotate(180deg) translateY(-50px) rotate(-180deg);">🥁</div>
-        <div class="emoji" style="transform: rotate(225deg) translateY(-50px) rotate(-225deg);">🎷</div>
-        <div class="emoji" style="transform: rotate(270deg) translateY(-50px) rotate(-270deg);">🎵</div>
-        <div class="emoji" style="transform: rotate(315deg) translateY(-50px) rotate(-315deg);">🎶</div>
-        <div class="text-center mt-32 text-lg font-medium text-primary">Loading loops...</div>
-      </div>
+      <A href="/practice/song">No Loops found. Click "New Loop" to start</A>
     </div>
   )
 }
