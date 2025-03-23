@@ -16,11 +16,10 @@ const Player = () => {
   )
 }
 
-// TODO: This Loader is nested in a grid below - how can I make it take up the full width of the grid? AI!
 const Loader = () => {
   return (
-    <div class="flex justify-center items-center w-full h-screen">
-      <A href="/practice/song">No Loops found. Click "New Loop" to start</A>
+    <div class="col-span-1 sm:col-span-1 md:col-span-2 xl:col-span-3 flex justify-center items-center w-full h-screen">
+      <A href="/practice/song" class="btn btn-primary">No Loops found. Click "New Loop" to start</A>
     </div>
   )
 }
