@@ -1,5 +1,4 @@
 import type { APIEvent } from "@solidjs/start/server";
-import SuperJSON from "superjson";
 import { storage } from "~/kv";
 import { rateLimit } from "~/utils/rate-limiter";
 
@@ -62,22 +61,26 @@ export async function GET(event: APIEvent) {
         status: 200,
       });
     }
-  } catch {
+  } catch (error) {
+    console.warn("Error accessing the cache: ", error);
   } finally {
     // If not in cache, fetch from YouTube API
     const info = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${API_KEY}&fields=items(id,snippet(channelId,title,categoryId),statistics)&part=snippet,statistics`,
     );
-    const data = await info.json() as YouTubeVideoResponse;
+    const data = (await info.json()) as YouTubeVideoResponse;
     if ("items" in data && data.items?.length) {
       const videoInfo: YouTubeVideoItem = data.items[0];
-      console.log("Video info: ", videoInfo);
 
       if (videoInfo) {
-        // Store in cache for future requests
-        await storage.set(videoInfoKey(videoId), videoInfo, {
-          expirationTtl: CACHE_TTL,
-        });
+        try {
+          // Store in cache for future requests
+          await storage.set(videoInfoKey(videoId), videoInfo, {
+            expirationTtl: CACHE_TTL,
+          });
+        } catch (error) {
+          console.log("Failed to cache: ", error);
+        }
       }
 
       return new Response(JSON.stringify(videoInfo), { status: 200 });

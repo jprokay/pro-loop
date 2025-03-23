@@ -1,9 +1,8 @@
 import { A } from "@solidjs/router"
 import { liveQuery } from "dexie"
-import { For, from, lazy, Show, Suspense, createSignal, createMemo, createEffect, onCleanup } from "solid-js"
+import { For, from, lazy, createSignal, createMemo, createEffect, onCleanup } from "solid-js"
 import { LoopCard } from "~/components/LoopCard"
 import { db } from "~/db/db"
-import CassetteTapeLoader from "~/components/CassetteTapeLoader"
 const LazyPlayer = lazy(() => import("~/components/Player"))
 const DEFAULT_URL = 'https://youtube.com/watch?v=nN120kCiVyQ'
 
@@ -29,14 +28,14 @@ export default function PracticePage() {
   const [debouncedQuery, setDebouncedQuery] = createSignal("");
   const loopsObservable = liveQuery(() => db.loops.toArray())
   const loops = from(loopsObservable)
-  
+
   // Debounce the search query with a 300ms delay
   createEffect(() => {
     const currentQuery = searchQuery();
     const timeoutId = setTimeout(() => {
       setDebouncedQuery(currentQuery);
     }, 300);
-    
+
     onCleanup(() => clearTimeout(timeoutId));
   });
 
@@ -45,8 +44,8 @@ export default function PracticePage() {
     if (!query) return loops();
 
     return loops()?.filter(loop =>
-      (loop.videoName?.toLowerCase().includes(query) ||
-       loop.loopName?.toLowerCase().includes(query))
+    (loop.videoName?.toLowerCase().includes(query) ||
+      loop.loopName?.toLowerCase().includes(query))
     );
   });
 

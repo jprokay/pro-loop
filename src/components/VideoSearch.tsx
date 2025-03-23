@@ -19,11 +19,11 @@ export default function VideoSearch(props: Props) {
       setResults([]);
       return;
     }
-    
+
     const timer = setTimeout(() => {
       setDebouncedQuery(currentQuery);
-    }, 500); // 500ms debounce delay
-    
+    }, 200); // 500ms debounce delay
+
     onCleanup(() => clearTimeout(timer));
   });
 
@@ -31,22 +31,22 @@ export default function VideoSearch(props: Props) {
   createEffect(() => {
     const searchQuery = debouncedQuery();
     if (!searchQuery.trim()) return;
-    
+
     performSearch(searchQuery);
   });
 
   async function performSearch(searchQuery: string) {
     setIsSearching(true);
     setError(null);
-    
+
     try {
       const response = await fetch(`/api/videos/search?q=${encodeURIComponent(searchQuery)}`);
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to search videos");
       }
-      
+
       const data = await response.json();
       setResults(data.videos || []);
     } catch (err) {
@@ -69,7 +69,7 @@ export default function VideoSearch(props: Props) {
       <div class="relative mb-4">
         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
           </svg>
         </div>
         <input
@@ -85,17 +85,17 @@ export default function VideoSearch(props: Props) {
           </div>
         )}
       </div>
-      
+
       <Show when={error()}>
         <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
           {error()}
         </div>
       </Show>
-      
+
       <Show when={results().length > 0}>
-        <VideoSearchResults 
-          results={results()} 
-          onSelect={handleVideoSelect} 
+        <VideoSearchResults
+          results={results()}
+          onSelect={handleVideoSelect}
         />
       </Show>
     </div>

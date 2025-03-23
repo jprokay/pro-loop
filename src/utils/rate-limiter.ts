@@ -111,28 +111,32 @@ export async function rateLimit(
   event: APIEvent,
   options: RateLimitOptions,
 ): Promise<Response | null> {
-  const result = await checkRateLimit(event, options);
+  try {
+    const result = await checkRateLimit(event, options);
 
-  if (!result.allowed) {
-    return new Response(
-      JSON.stringify({
-        error: "Too many requests",
-        retryAfter: result.reset - Math.floor(Date.now() / 1000),
-      }),
-      {
-        status: 429,
-        headers: {
-          "Content-Type": "application/json",
-          "X-RateLimit-Limit": options.limit.toString(),
-          "X-RateLimit-Remaining": result.remaining.toString(),
-          "X-RateLimit-Reset": result.reset.toString(),
-          "Retry-After": (
-            result.reset - Math.floor(Date.now() / 1000)
-          ).toString(),
+    if (!result.allowed) {
+      return new Response(
+        JSON.stringify({
+          error: "Too many requests",
+          retryAfter: result.reset - Math.floor(Date.now() / 1000),
+        }),
+        {
+          status: 429,
+          headers: {
+            "Content-Type": "application/json",
+            "X-RateLimit-Limit": options.limit.toString(),
+            "X-RateLimit-Remaining": result.remaining.toString(),
+            "X-RateLimit-Reset": result.reset.toString(),
+            "Retry-After": (
+              result.reset - Math.floor(Date.now() / 1000)
+            ).toString(),
+          },
         },
-      },
-    );
-  }
+      );
+    }
 
-  return null; // Continue processing the request
+    return null; // Continue processing the request
+  } catch {
+    return null;
+  }
 }

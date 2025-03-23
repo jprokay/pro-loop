@@ -1,6 +1,5 @@
 import { useSearchParams } from "@solidjs/router";
-import { Show, Suspense, createEffect, createMemo, createResource, createSignal } from "solid-js";
-import { createError } from "unstorage/drivers/utils/index";
+import { Show, createMemo, createResource } from "solid-js";
 import Player from "~/components/Player";
 import VideoSearch from "~/components/VideoSearch";
 import { useAuthContext } from "~/context/auth-context";
