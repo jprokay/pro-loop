@@ -24,18 +24,20 @@ const Loader = () => {
 }
 export default function PracticePage() {
   const [searchQuery, setSearchQuery] = createSignal("");
-  const loopsObservable = liveQuery(() => db.loops.toArray())
-  const loops = from(loopsObservable)
-
-  const filteredLoops = createMemo(() => {
+  const filteredLoops = from(liveQuery(() => {
     const query = searchQuery().toLowerCase().trim();
-    if (!query) return loops();
+    if (!query) {
+      return db.loops.toArray();
+    }
 
-    return loops()?.filter(loop =>
-    (loop.videoName?.toLowerCase().includes(query) ||
-      loop.loopName?.toLowerCase().includes(query))
-    );
-  });
+    // Use Dexie's collection.filter() to filter at the database level
+    return db.loops
+      .filter(loop =>
+      (loop.videoName?.toLowerCase().includes(query) ||
+        loop.loopName?.toLowerCase().includes(query))
+      )
+      .toArray();
+  }));
 
   return (
     <div class="w-full min-w-full py-8 px-8 bg-base-300">
