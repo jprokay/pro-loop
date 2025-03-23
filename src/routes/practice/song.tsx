@@ -9,8 +9,24 @@ const DEFAULT_ID = 'nN120kCiVyQ';
 function videoIdToUrl(videoId: string): string {
   return `https://youtube.com/watch?v=${videoId}`
 }
-// TODO: Fix the type errors by using the types defined in the api info route AI!
-async function fetchInfo(videoId: string) {
+
+// Import the YouTube API types from the info route
+type YouTubeVideoItem = {
+  id: string;
+  snippet: {
+    channelId: string;
+    title: string;
+    categoryId: string;
+  };
+  statistics: {
+    viewCount: string;
+    likeCount: string;
+    favoriteCount: string;
+    commentCount: string;
+  };
+};
+
+async function fetchInfo(videoId: string): Promise<string | undefined> {
   try {
     const response = await fetch(`/api/videos/${videoId}/info`, {
       headers: {
@@ -23,14 +39,13 @@ async function fetchInfo(videoId: string) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const videoTitle = await response.json();
+    const videoInfo = await response.json() as YouTubeVideoItem;
 
-    if (!videoTitle || !videoTitle.snippet || !videoTitle.snippet.title) {
-      console.warn("Invalid video info response:", videoTitle);
-      return 'Unknown Title'
+    if (!videoInfo || !videoInfo.snippet || !videoInfo.snippet.title) {
+      console.warn("Invalid video info response:", videoInfo);
+      return 'Unknown Title';
     } else {
-
-      return videoTitle.snippet.title as string
+      return videoInfo.snippet.title;
     }
 
   } catch (error) {
