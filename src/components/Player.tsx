@@ -423,14 +423,12 @@ const Player: Component<Props> = (props) => {
     }
   }
 
-  // TODO: Ensure the title section overflows at a certain point with ellipses based on the size of the available viewport AI!
   return (
     <div class="w-full">
       <Notification it={notification} show={showNotification()} />
       <div class="w-full mb-4 border-2 border-gray-300 rounded-lg overflow-hidden">
         <div class="p-2 flex justify-between items-center">
-
-          <h1 class="text-3xl font-mono text-primary-400 tracking-widest mb-1">
+          <h1 class="text-3xl font-mono text-primary-400 tracking-widest mb-1 truncate max-w-[70%] overflow-hidden text-ellipsis" title={video.title || "Loading video..."}>
             {video.title || "Loading video..."}
           </h1>
           <button
