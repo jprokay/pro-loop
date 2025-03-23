@@ -18,11 +18,13 @@ const Player = () => {
 
 const Loader = () => {
   return (
-    <div class="col-span-1 sm:col-span-1 md:col-span-2 xl:col-span-3 flex justify-center items-center w-full h-screen">
-      <A href="/practice/song" class="btn btn-primary">No Loops found. Click "New Loop" to start</A>
+    <div class="col-span-1 sm:col-span-1 md:col-span-2 xl:col-span-3 flex justify-center items-start w-full h-screen">
+      <A href="/practice/song" class="btn btn-outline btn-secondary">No Loops found. Click "New Loop" to start</A>
     </div>
   )
 }
+
+// TODO: Add debounced filtering of the loops AI!
 export default function PracticePage() {
   const [searchQuery, setSearchQuery] = createSignal("");
   const loopsObservable = liveQuery(() => db.loops.toArray())
