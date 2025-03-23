@@ -75,7 +75,7 @@ const Player: Component<Props> = (props) => {
   onCleanup(() => {
     document.head.removeChild(styleElement);
   });
-  const [player, setPlayer] = createSignal<YTPlayer>();
+  const [player, setPlayer] = createSignal<YTPlayer | undefined>(undefined);
   const [slider, setSlider] = createSignal(1);
   const [saving, setSaving] = createSignal(false);
   const [saveSuccess, setSaveSuccess] = createSignal(false);
@@ -138,6 +138,7 @@ const Player: Component<Props> = (props) => {
     if (metaViewport) {
       metaViewport.setAttribute('content', 'width=device-width, initial-scale=1');
     }
+    setPlayer(undefined)
   });
 
   onMount(async () => {
@@ -422,11 +423,13 @@ const Player: Component<Props> = (props) => {
     }
   }
 
+  // TODO: Ensure the title section overflows at a certain point with ellipses based on the size of the available viewport AI!
   return (
     <div class="w-full">
       <Notification it={notification} show={showNotification()} />
       <div class="w-full mb-4 border-2 border-gray-300 rounded-lg overflow-hidden">
         <div class="p-2 flex justify-between items-center">
+
           <h1 class="text-3xl font-mono text-primary-400 tracking-widest mb-1">
             {video.title || "Loading video..."}
           </h1>
