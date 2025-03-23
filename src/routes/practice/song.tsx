@@ -1,5 +1,6 @@
 import { useSearchParams } from "@solidjs/router";
-import { Suspense, createMemo, createSignal } from "solid-js";
+import { Show, Suspense, createEffect, createMemo, createResource, createSignal } from "solid-js";
+import { createError } from "unstorage/drivers/utils/index";
 import Player from "~/components/Player";
 import VideoSearch from "~/components/VideoSearch";
 import { useAuthContext } from "~/context/auth-context";
@@ -8,16 +9,45 @@ const DEFAULT_ID = 'nN120kCiVyQ';
 function videoIdToUrl(videoId: string): string {
   return `https://youtube.com/watch?v=${videoId}`
 }
+// TODO: Fix the type errors by using the types defined in the api info route AI!
+async function fetchInfo(videoId: string) {
+  try {
+    const response = await fetch(`/api/videos/${videoId}/info`, {
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      }
+    });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const videoTitle = await response.json();
+
+    if (!videoTitle || !videoTitle.snippet || !videoTitle.snippet.title) {
+      console.warn("Invalid video info response:", videoTitle);
+      return 'Unknown Title'
+    } else {
+
+      return videoTitle.snippet.title as string
+    }
+
+  } catch (error) {
+    console.error("Error fetching video info:", error);
+    return undefined;
+  }
+
+
+}
 export default function PracticePage() {
   const [search, setSearch] = useSearchParams();
-  const [currentVideoId, setCurrentVideoId] = createSignal(search.videoId || DEFAULT_ID);
-  const [currentVideoTitle, setCurrentVideoTitle] = createSignal(search.songName || "");
+  const [data] = createResource(() => String(search.videoId || DEFAULT_ID), fetchInfo)
 
   const clerk = useAuthContext()
   // Create stable props for the Player component
-  const videoUrl = createMemo(() => videoIdToUrl(String(currentVideoId())));
-  const songName = createMemo(() => currentVideoTitle() || undefined);
+  const videoId = createMemo(() => String(search.videoId || DEFAULT_ID));
+  const videoUrl = createMemo(() => videoIdToUrl(videoId()));
   const startMinute = createMemo(() => Number(search.startMinute) || 0);
   const startSecond = createMemo(() => Number(search.startSecond) || 0);
   const endMinute = createMemo(() => Number(search.endMinute) || 0);
@@ -33,19 +63,18 @@ export default function PracticePage() {
   })
 
   function handleVideoSelect(videoId: string, title: string) {
-    setCurrentVideoId(videoId);
-    setCurrentVideoTitle(title);
-    setSearch({ videoId, songName: title });
+    setSearch({ videoId, songName: title, startMinute: 0, startSecond: 0, endMinute: undefined, endSecond: undefined });
   }
+
 
   return (
     <div class="w-full max-w-4xl">
       <VideoSearch onSelectVideo={handleVideoSelect} />
-      
+
       <div>
-        <Suspense>
+        <Show when={!data.loading} fallback={<p>Loading...</p>}>
           <Player
-            videoName={songName()}
+            videoName={data()}
             userId={userId()}
             fallback={<p>Loading player...</p>}
             videoUrl={videoUrl()}
@@ -55,7 +84,7 @@ export default function PracticePage() {
             endMinute={endMinute()}
             endSecond={endSecond()}
           />
-        </Suspense>
+        </Show>
       </div>
     </div>
   );
