@@ -3,6 +3,36 @@ import SuperJSON from "superjson";
 import { storage } from "~/kv";
 import { rateLimit } from "~/utils/rate-limiter";
 
+// YouTube API response types
+interface YouTubeVideoResponse {
+  items?: YouTubeVideoItem[];
+  error?: {
+    code: number;
+    message: string;
+    errors: Array<{
+      message: string;
+      domain: string;
+      reason: string;
+    }>;
+    status: string;
+  };
+}
+
+interface YouTubeVideoItem {
+  id: string;
+  snippet: {
+    channelId: string;
+    title: string;
+    categoryId: string;
+  };
+  statistics: {
+    viewCount: string;
+    likeCount: string;
+    favoriteCount: string;
+    commentCount: string;
+  };
+}
+
 const CACHE_TTL = 60 * 60 * 24 * 7; // 1 week in seconds
 
 function videoInfoKey(videoId: string): string {
@@ -38,10 +68,9 @@ export async function GET(event: APIEvent) {
     const info = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${API_KEY}&fields=items(id,snippet(channelId,title,categoryId),statistics)&part=snippet,statistics`,
     );
-    const data = await info.json();
-    // TODO: Add types to return value AI!
-    if ("items" in data) {
-      const videoInfo = data.items[0];
+    const data = await info.json() as YouTubeVideoResponse;
+    if ("items" in data && data.items?.length) {
+      const videoInfo: YouTubeVideoItem = data.items[0];
       console.log("Video info: ", videoInfo);
 
       if (videoInfo) {
