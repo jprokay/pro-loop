@@ -1,6 +1,6 @@
 import { A } from "@solidjs/router"
 import { liveQuery } from "dexie"
-import { For, from, lazy, Show, Suspense, createSignal, createMemo } from "solid-js"
+import { For, from, lazy, Show, Suspense, createSignal, createMemo, createEffect, onCleanup } from "solid-js"
 import { LoopCard } from "~/components/LoopCard"
 import { db } from "~/db/db"
 import CassetteTapeLoader from "~/components/CassetteTapeLoader"
@@ -24,19 +24,29 @@ const Loader = () => {
   )
 }
 
-// TODO: Add debounced filtering of the loops AI!
 export default function PracticePage() {
   const [searchQuery, setSearchQuery] = createSignal("");
+  const [debouncedQuery, setDebouncedQuery] = createSignal("");
   const loopsObservable = liveQuery(() => db.loops.toArray())
   const loops = from(loopsObservable)
+  
+  // Debounce the search query with a 300ms delay
+  createEffect(() => {
+    const currentQuery = searchQuery();
+    const timeoutId = setTimeout(() => {
+      setDebouncedQuery(currentQuery);
+    }, 300);
+    
+    onCleanup(() => clearTimeout(timeoutId));
+  });
 
   const filteredLoops = createMemo(() => {
-    const query = searchQuery().toLowerCase().trim();
+    const query = debouncedQuery().toLowerCase().trim();
     if (!query) return loops();
 
     return loops()?.filter(loop =>
-    (loop.videoName?.toLowerCase().includes(query) ||
-      loop.loopName?.toLowerCase().includes(query))
+      (loop.videoName?.toLowerCase().includes(query) ||
+       loop.loopName?.toLowerCase().includes(query))
     );
   });
 
