@@ -17,7 +17,6 @@ export async function GET(event: APIEvent) {
     windowInSeconds: 60 * 60, // 1 hour
     identifier: "youtube-video-info",
   });
-  console.log("RL Response: ", rateLimitResponse);
 
   // If rate limited, return the response
   if (rateLimitResponse) {
@@ -26,26 +25,21 @@ export async function GET(event: APIEvent) {
 
   const videoId = event.params.id;
 
-  // Try to get from cache first
-  console.log("VideoID: ", videoId);
   try {
     const cachedData = await storage.get(videoInfoKey(videoId));
     if (cachedData) {
-      console.log(`Cache hit for video ${videoId}`);
       return new Response(JSON.stringify(cachedData), {
         status: 200,
       });
     }
   } catch {
-    console.log(`Cache miss for video ${videoId}, fetching from YouTube API`);
   } finally {
     // If not in cache, fetch from YouTube API
     const info = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${API_KEY}&fields=items(id,snippet(channelId,title,categoryId),statistics)&part=snippet,statistics`,
     );
-    console.log("API Key: ", API_KEY);
-    console.log("fetching: ", JSON.stringify(info));
     const data = await info.json();
+    // TODO: Add types to return value AI!
     if ("items" in data) {
       const videoInfo = data.items[0];
       console.log("Video info: ", videoInfo);
