@@ -28,12 +28,13 @@ export const LoopCard: Component<Props> = (props) => {
   sParams.append("endSecond", String(props.ending.second))
   sParams.append("endMinute", String(props.ending.minute))
 
+  // How can I improve the SEO for the img below? I think I need a fallback or something to avoid layout shifts? AI?
   return (
     <div class="card bg-base-100 image-full max-w-96 shadow-sm">
       <figure>
         <img
           src={`https://img.youtube.com/vi/${props.videoId}/sddefault.jpg`}
-          alt={props.songName} />
+          alt={props.songName} height={640} width={480} />
       </figure>
       <div class="card-body">
         <div class="flex flex-wrap gap-2">
