@@ -10,6 +10,7 @@ export default class Loops extends Entity<AppDB> {
   endSecond!: number;
   loopName!: string;
   videoName!: string;
+  tags?: string[] = []; // Add tags array
 }
 
 type AddLoopProps = {
@@ -20,12 +21,13 @@ type AddLoopProps = {
   endSecond: number;
   videoId: string;
   videoName: string;
+  tags?: string[]; // Add optional tags property
 };
 
 export async function addLoop(props: AddLoopProps) {
-  await db.loops.add({ ...props });
+  await db.loops.add({ ...props, tags: props.tags || [] });
 }
 
 export async function updateLoop(id: number, props: AddLoopProps) {
-  await db.loops.update(id, { ...props });
+  await db.loops.update(id, { ...props, tags: props.tags || [] });
 }

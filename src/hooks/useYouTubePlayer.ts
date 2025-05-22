@@ -41,6 +41,7 @@ export type UseYouTubePlayerOptions = {
   initialEndMinute?: number;
   initialEndSecond?: number;
   initialVideoName?: string;
+  initialTags?: string[]; // Add this for initial tags
 };
 
 export function useYouTubePlayer(videoUrl: string, options: UseYouTubePlayerOptions = {}) {
@@ -66,6 +67,7 @@ export function useYouTubePlayer(videoUrl: string, options: UseYouTubePlayerOpti
     name: undefined,
     title: options.initialVideoName,
     isVisible: true,
+    tags: options.initialTags || [], // Initialize tags
   });
 
   onMount(() => {
@@ -281,6 +283,20 @@ export function useYouTubePlayer(videoUrl: string, options: UseYouTubePlayerOpti
     player()?.setPlaybackRate(newRate);
   }
 
+  // Add tag management functions
+  function addTag(tag: string) {
+    const trimmedTag = tag.trim();
+    if (!trimmedTag) return;
+    
+    if (!video.tags.includes(trimmedTag)) {
+      setVideo("tags", (tags) => [...(tags || []), trimmedTag]);
+    }
+  }
+
+  function removeTag(tag: string) {
+    setVideo("tags", (tags) => (tags || []).filter(t => t !== tag));
+  }
+
   return {
     player,
     video,
@@ -299,5 +315,7 @@ export function useYouTubePlayer(videoUrl: string, options: UseYouTubePlayerOpti
     changeVideo,
     changePlaybackRate,
     getCurrentTime,
+    addTag,           // Add the tag functions
+    removeTag
   };
 }

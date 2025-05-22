@@ -6,7 +6,9 @@ import {
   createSignal,
   onCleanup,
   onMount,
+  For,
 } from "solid-js";
+import TagControls from "~/components/player/TagControls";
 
 import YouTubePlayer from "youtube-player";
 import { type YouTubePlayer as YTPlayer } from "youtube-player/dist/types";
@@ -29,6 +31,7 @@ type Props = {
   loopName?: string
   userId?: string
   videoName?: string
+  tags?: string[] // Add tags property
 }
 
 function parseBrowserBarUrl(url: string): string | undefined {
@@ -97,7 +100,8 @@ const Player: Component<Props> = (props) => {
     duration: 0,
     name: undefined,
     title: props.videoName,
-    isVisible: true
+    isVisible: true,
+    tags: props.tags || [] // Initialize tags
   });
 
   const { show: showNotification, setShow: setShowNotification, notification, setNotification } = useNotification()
@@ -377,12 +381,17 @@ const Player: Component<Props> = (props) => {
     const startMinute = formData.get("startMinutes") || video.start.minute
     const endSecond = formData.get("endSeconds") || video.end.second
     const endMinute = formData.get("endMinutes") || video.end.minute
+    const tags = video.tags || []
 
     try {
       if (props.loopId) {
-        await updateLoop(props.loopId, { videoId, startSecond, startMinute, endSecond, endMinute, loopName, videoName });
+        await updateLoop(props.loopId, { 
+          videoId, startSecond, startMinute, endSecond, endMinute, loopName, videoName, tags 
+        });
       } else {
-        await addLoop({ videoId, startSecond, startMinute, endSecond, endMinute, loopName, videoName });
+        await addLoop({ 
+          videoId, startSecond, startMinute, endSecond, endMinute, loopName, videoName, tags 
+        });
       }
 
       const loopx = await db.loops.toArray();
@@ -652,6 +661,13 @@ const Player: Component<Props> = (props) => {
         </fieldset>
 
 
+
+        {/* Add TagControls before speed controls */}
+        <TagControls
+          tags={video.tags || []}
+          onAddTag={(tag) => setVideo("tags", tags => [...(tags || []), tag])}
+          onRemoveTag={(tag) => setVideo("tags", tags => (tags || []).filter(t => t !== tag))}
+        />
 
         <div class="w-full md:max-w-md lg:max-w-lg mx-auto my-4">
           <input class="range w-full" type="range" name="playbackRate" min="0.5" max="1.5" step="0.05"
