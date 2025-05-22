@@ -40,21 +40,16 @@ export default function Nav() {
   })
 
   return (
-    <nav class="navbar bg-neutral shadow-sm">
+    <nav class="navbar bg-neutral shadow-sm px-8">
       <div class="navbar-start">
-        <A href="/practice/song">New Loop</A>
+        <A href="/practice/song" class="btn btn-primary btn-sm md:btn-md
+">New Loop</A>
       </div>
       <div class="navbar-center">
         <a class="btn btn-ghost text-3xl font-mono" href="/">PRO-L00P</a>
       </div>
       <div class="navbar-end">
-        <Show when={clerk.latest && clerk().user} fallback={<button class="btn btn-primary cursor-pointer" onClick={() => modalRef?.showModal()}>Sign In</button>}>
-          <div ref={userButtonRef} id="user-button"></div>
-        </Show>
       </div>
-      <Portal>
-        <SignInModal ref={modalRef!} id="foo" />
-      </Portal>
     </nav>
   );
 }
