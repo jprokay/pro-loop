@@ -2,12 +2,12 @@ import { A } from "@solidjs/router"
 import { liveQuery } from "dexie"
 import { For, from, lazy, createSignal, createMemo, createEffect, onCleanup } from "solid-js"
 import { LoopCard } from "~/components/LoopCard"
+import SEOHead from "~/components/SEOHead"
 import { db } from "~/db/db"
 const LazyPlayer = lazy(() => import("~/components/Player"))
 const DEFAULT_URL = 'https://youtube.com/watch?v=nN120kCiVyQ'
 
 const Player = () => {
-  return (
     <div class="w-full max-w-4xl">
       <LazyPlayer fallback={null} videoUrl={DEFAULT_URL} enableSave={true} startMinute={0} startSecond={0} endMinute={0} endSecond={0} />
     </div>
@@ -24,6 +24,15 @@ const Loader = () => {
 }
 
 export default function PracticePage() {
+  // Add SEO component at the top of the component
+  return (
+    <>
+      <SEOHead 
+        title="Pro-L00ps | Your Music Loop Library"
+        description="Create, save and practice YouTube music loops. Master difficult passages with precise control."
+        canonicalUrl="https://pro-loops.com/"
+      />
+      
   const [searchQuery, setSearchQuery] = createSignal("");
   const [debouncedQuery, setDebouncedQuery] = createSignal("");
   const loopsObservable = liveQuery(() => db.loops.toArray())
