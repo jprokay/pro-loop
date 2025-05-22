@@ -1,4 +1,10 @@
-import { createSignal, createStore, onCleanup, onMount, produce } from "solid-js";
+import {
+  createSignal,
+  createStore,
+  onCleanup,
+  onMount,
+  produce,
+} from "solid-js";
 import YouTubePlayer from "youtube-player";
 import { type YouTubePlayer as YTPlayer } from "youtube-player/dist/types";
 import { TimePiece, VideoState } from "~/types/player";
@@ -44,7 +50,10 @@ export type UseYouTubePlayerOptions = {
   initialTags?: string[]; // Add this for initial tags
 };
 
-export function useYouTubePlayer(videoUrl: string, options: UseYouTubePlayerOptions = {}) {
+export function useYouTubePlayer(
+  videoUrl: string,
+  options: UseYouTubePlayerOptions = {},
+) {
   const [player, setPlayer] = createSignal<YTPlayer>();
   const [saving, setSaving] = createSignal(false);
   const [saveSuccess, setSaveSuccess] = createSignal(false);
@@ -72,31 +81,35 @@ export function useYouTubePlayer(videoUrl: string, options: UseYouTubePlayerOpti
 
   onMount(() => {
     try {
-      console.log("Mounting YouTube player with videoId:", video.videoId);
-      
       // Check if YouTube iframe API is loaded
-      if (typeof window !== 'undefined' && !window.YT) {
+      if (typeof window !== "undefined" && !window.YT) {
         console.warn("YouTube iframe API not loaded yet");
-        
+
         // You could add a script tag to load it manually if needed
-        const tag = document.createElement('script');
+        const tag = document.createElement("script");
         tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
+        const firstScriptTag = document.getElementsByTagName("script")[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       }
-      
+
       // Add meta tag to prevent zooming on input focus for mobile devices
       const metaViewport = document.querySelector('meta[name="viewport"]');
       if (metaViewport) {
-        metaViewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1');
+        metaViewport.setAttribute(
+          "content",
+          "width=device-width, initial-scale=1, maximum-scale=1",
+        );
       } else {
-        const newMeta = document.createElement('meta');
-        newMeta.name = 'viewport';
-        newMeta.content = 'width=device-width, initial-scale=1, maximum-scale=1';
+        const newMeta = document.createElement("meta");
+        newMeta.name = "viewport";
+        newMeta.content =
+          "width=device-width, initial-scale=1, maximum-scale=1";
         document.head.appendChild(newMeta);
       }
 
-      const startSec = Number(options.initialStartMinute || 0) * 60 + Number(options.initialStartSecond || 0);
+      const startSec =
+        Number(options.initialStartMinute || 0) * 60 +
+        Number(options.initialStartSecond || 0);
       console.log("Starting at second:", startSec);
 
       // Check if player element exists
@@ -128,24 +141,29 @@ export function useYouTubePlayer(videoUrl: string, options: UseYouTubePlayerOpti
     // Restore original viewport meta tag when component unmounts
     const metaViewport = document.querySelector('meta[name="viewport"]');
     if (metaViewport) {
-      metaViewport.setAttribute('content', 'width=device-width, initial-scale=1');
+      metaViewport.setAttribute(
+        "content",
+        "width=device-width, initial-scale=1",
+      );
     }
   });
 
   // Set up intervals for loop functionality and duration detection
   const timer = setInterval(() => {
-    player()?.getDuration().then((duration) => {
-      if (duration > 0 && video.end.minute <= 0 && video.end.second <= 0) {
-        const endMinutes = Math.floor(duration / 60);
-        const endSeconds = Math.round(duration % 60);
+    player()
+      ?.getDuration()
+      .then((duration) => {
+        if (duration > 0 && video.end.minute <= 0 && video.end.second <= 0) {
+          const endMinutes = Math.floor(duration / 60);
+          const endSeconds = Math.round(duration % 60);
 
-        setVideo("duration", duration);
-        setVideo("end", {
-          minute: endMinutes,
-          second: endSeconds,
-        });
-      }
-    });
+          setVideo("duration", duration);
+          setVideo("end", {
+            minute: endMinutes,
+            second: endSeconds,
+          });
+        }
+      });
   }, 500);
 
   const loopInterval = setInterval(async () => {
@@ -273,7 +291,7 @@ export function useYouTubePlayer(videoUrl: string, options: UseYouTubePlayerOpti
         v.videoId = videoId;
         v.videoUrl = url;
         v.title = videoTitle.snippet.title;
-      })
+      }),
     );
   }
 
@@ -287,14 +305,14 @@ export function useYouTubePlayer(videoUrl: string, options: UseYouTubePlayerOpti
   function addTag(tag: string) {
     const trimmedTag = tag.trim();
     if (!trimmedTag) return;
-    
+
     if (!video.tags.includes(trimmedTag)) {
       setVideo("tags", (tags) => [...(tags || []), trimmedTag]);
     }
   }
 
   function removeTag(tag: string) {
-    setVideo("tags", (tags) => (tags || []).filter(t => t !== tag));
+    setVideo("tags", (tags) => (tags || []).filter((t) => t !== tag));
   }
 
   return {
@@ -315,7 +333,7 @@ export function useYouTubePlayer(videoUrl: string, options: UseYouTubePlayerOpti
     changeVideo,
     changePlaybackRate,
     getCurrentTime,
-    addTag,           // Add the tag functions
-    removeTag
+    addTag, // Add the tag functions
+    removeTag,
   };
 }

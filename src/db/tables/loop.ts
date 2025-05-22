@@ -35,7 +35,6 @@ export async function updateTags(id: number, tags: string[]) {
     .modify((loop) => {
       loop.tags = [];
       tags.forEach((tag) => loop.tags!.push(tag));
-      console.log("Loop tags: ", loop.tags);
       return true;
     });
 }

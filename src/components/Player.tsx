@@ -317,7 +317,6 @@ const Player: Component<Props> = (props) => {
   createEffect(async () => {
     const id = loopId()
     if (id) {
-      console.log("ID: ", id)
       await updateTags(id, video.tags)
     }
   })
@@ -538,7 +537,6 @@ const Player: Component<Props> = (props) => {
                 min={0}
                 value={video.start.minute}
                 onInput={(e) => debouncedChangeStartMinute(e)}
-                onFocus={(e) => e.target.setAttribute('readonly', 'readonly')}
                 onTouchStart={(e) => e.target.removeAttribute('readonly')}
                 onBlur={(e) => e.target.removeAttribute('readonly')}
               />
@@ -556,7 +554,6 @@ const Player: Component<Props> = (props) => {
                 max={59}
                 value={video.start.second}
                 onInput={(e) => debouncedChangeStartSecond(e)}
-                onFocus={(e) => e.target.setAttribute('readonly', 'readonly')}
                 onTouchStart={(e) => e.target.removeAttribute('readonly')}
                 onBlur={(e) => e.target.removeAttribute('readonly')}
               />
@@ -653,7 +650,6 @@ const Player: Component<Props> = (props) => {
                 min={0}
                 value={video.end.minute}
                 onInput={(e) => debouncedChangeEndMinute(e)}
-                onFocus={(e) => e.target.setAttribute('readonly', 'readonly')}
                 onTouchStart={(e) => e.target.removeAttribute('readonly')}
                 onBlur={(e) => e.target.removeAttribute('readonly')}
               />
@@ -671,7 +667,6 @@ const Player: Component<Props> = (props) => {
                 max={59}
                 value={video.end.second}
                 onInput={(e) => debouncedChangeEndSecond(e)}
-                onFocus={(e) => e.target.setAttribute('readonly', 'readonly')}
                 onTouchStart={(e) => e.target.removeAttribute('readonly')}
                 onBlur={(e) => e.target.removeAttribute('readonly')}
               />
