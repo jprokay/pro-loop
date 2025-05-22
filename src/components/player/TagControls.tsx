@@ -30,10 +30,10 @@ const TagControls: Component<TagControlsProps> = (props) => {
       <div class="flex flex-wrap gap-2 mb-2">
         <For each={props.tags}>
           {(tag) => (
-            <div class="badge badge-primary gap-1">
+            <div class="badge badge-primary badge-outline gap-1">
               {tag}
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => props.onRemoveTag(tag)}
                 class="ml-1"
                 aria-label={`Remove tag ${tag}`}
@@ -47,7 +47,7 @@ const TagControls: Component<TagControlsProps> = (props) => {
           )}
         </For>
       </div>
-      
+
       <div class="join w-full flex flex-wrap md:flex-nowrap">
         <input
           type="text"
@@ -59,7 +59,7 @@ const TagControls: Component<TagControlsProps> = (props) => {
           aria-label="New tag input"
           data-testid="tag-input"
         />
-        <button 
+        <button
           type="button"
           class="btn btn-accent join-item w-full md:w-1/5 py-3 text-base"
           onClick={handleAddTag}

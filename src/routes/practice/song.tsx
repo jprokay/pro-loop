@@ -66,6 +66,7 @@ export default function PracticePage() {
   const startSecond = createMemo(() => Number(search.startSecond) || 0);
   const endMinute = createMemo(() => Number(search.endMinute) || 0);
   const endSecond = createMemo(() => Number(search.endSecond) || 0);
+  const loopId = createMemo(() => Number(search.loopId) || undefined);
   const userId = createMemo(() => {
     if (clerk.latest) {
       const user = clerk().user
@@ -88,6 +89,7 @@ export default function PracticePage() {
       <div>
         <Show when={!data.loading} fallback={<p>Loading...</p>}>
           <Player
+            loopId={loopId()}
             videoName={data()}
             userId={userId()}
             fallback={<p>Loading player...</p>}

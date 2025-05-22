@@ -12,7 +12,8 @@
     "strict": true,
     "types": [
         "vinxi/types/client",
-        "@cloudflare/workers-types/2023-07-01"
+        "@cloudflare/workers-types/2023-07-01",
+        "@testing-library/jest-dom"
     ],
     "isolatedModules": true,
     "paths": {

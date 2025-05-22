@@ -27,7 +27,9 @@ const SignInModal: Component<{ id: string, ref: HTMLDialogElement }> = (props) =
 }
 export default function Nav() {
 
-
+  /**
+   * TODO: Bring back device sync
+   *
   let userButtonRef: HTMLDivElement | undefined
   let modalRef: HTMLDialogElement | undefined
 
@@ -38,6 +40,7 @@ export default function Nav() {
       clerk().mountUserButton(userButtonRef!)
     }
   })
+  */
 
   return (
     <nav class="navbar bg-neutral shadow-sm px-8">

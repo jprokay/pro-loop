@@ -25,9 +25,21 @@ type AddLoopProps = {
 };
 
 export async function addLoop(props: AddLoopProps) {
-  await db.loops.add({ ...props, tags: props.tags || [] });
+  return await db.loops.add({ ...props });
+}
+
+export async function updateTags(id: number, tags: string[]) {
+  return await db.loops
+    .where("id")
+    .equals(id)
+    .modify((loop) => {
+      loop.tags = [];
+      tags.forEach((tag) => loop.tags!.push(tag));
+      console.log("Loop tags: ", loop.tags);
+      return true;
+    });
 }
 
 export async function updateLoop(id: number, props: AddLoopProps) {
-  await db.loops.update(id, { ...props, tags: props.tags || [] });
+  return await db.loops.update(id, { ...props });
 }

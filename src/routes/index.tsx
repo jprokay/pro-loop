@@ -44,8 +44,9 @@ export default function PracticePage() {
     if (!query) return loops();
 
     return loops()?.filter(loop =>
-    (loop.videoName?.toLowerCase().includes(query) ||
-      loop.loopName?.toLowerCase().includes(query))
+      (loop.videoName?.toLowerCase().includes(query) ||
+        loop.loopName?.toLowerCase().includes(query)) ||
+      loop.tags?.includes(query)
     );
   });
 
@@ -70,7 +71,12 @@ export default function PracticePage() {
 
       <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
         <For each={filteredLoops()} fallback={<Loader />}>
-          {(loop) => <LoopCard starting={{ second: loop.startSecond, minute: loop.startMinute }} ending={{ second: loop.endSecond, minute: loop.endMinute }} videoId={loop.videoId} loopName={loop.loopName} loopImage={{ alt: "foo", src: "" }} songName={loop.videoName} />}
+          {(loop) => <LoopCard tags={loop.tags || []}
+            loopId={String(loop.id)}
+            starting={{ second: loop.startSecond, minute: loop.startMinute }}
+            ending={{ second: loop.endSecond, minute: loop.endMinute }}
+            videoId={loop.videoId} loopName={loop.loopName}
+            songName={loop.videoName} />}
         </For>
       </div>
     </div>

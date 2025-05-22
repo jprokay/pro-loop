@@ -15,7 +15,7 @@ import { type YouTubePlayer as YTPlayer } from "youtube-player/dist/types";
 import { createStore, produce } from "solid-js/store"
 import { Notification, useNotification } from "~/components/Notification";
 import { debounce } from "@solid-primitives/scheduled";
-import { addLoop, updateLoop } from "~/db/tables/loop";
+import { addLoop, updateLoop, updateTags } from "~/db/tables/loop";
 import { db } from "~/db/db"
 import SuperJSON from "superjson";
 
@@ -82,6 +82,7 @@ const Player: Component<Props> = (props) => {
   const [slider, setSlider] = createSignal(1);
   const [saving, setSaving] = createSignal(false);
   const [saveSuccess, setSaveSuccess] = createSignal(false);
+  const [loopId, setLoopId] = createSignal<number | undefined>(props.loopId)
 
   const [video, setVideo] = createStore({
     start: {
@@ -144,6 +145,15 @@ const Player: Component<Props> = (props) => {
     }
     setPlayer(undefined)
   });
+
+  onMount(async () => {
+    const id = props.loopId
+
+    if (id) {
+      const loop = await db.loops.where('id').equals(id).first()
+      setVideo(produce((video) => video.tags = loop?.tags || []))
+    }
+  })
 
   onMount(async () => {
     const videoId = parseUrl(props.videoUrl)
@@ -304,6 +314,14 @@ const Player: Component<Props> = (props) => {
     player()?.setPlaybackRate(video.playbackRate);
   })
 
+  createEffect(async () => {
+    const id = loopId()
+    if (id) {
+      console.log("ID: ", id)
+      await updateTags(id, video.tags)
+    }
+  })
+
   function playVideo() {
     player()?.playVideo();
     setVideo("playing", true)
@@ -381,19 +399,23 @@ const Player: Component<Props> = (props) => {
     const startMinute = formData.get("startMinutes") || video.start.minute
     const endSecond = formData.get("endSeconds") || video.end.second
     const endMinute = formData.get("endMinutes") || video.end.minute
-    const tags = video.tags || []
 
     try {
       if (props.loopId) {
-        await updateLoop(props.loopId, { 
-          videoId, startSecond, startMinute, endSecond, endMinute, loopName, videoName, tags 
+        await updateLoop(props.loopId, {
+          videoId, startSecond, startMinute, endSecond, endMinute, loopName, videoName
         });
       } else {
-        await addLoop({ 
-          videoId, startSecond, startMinute, endSecond, endMinute, loopName, videoName, tags 
+        const newLoopId = await addLoop({
+          videoId, startSecond, startMinute, endSecond, endMinute, loopName, videoName
         });
+
+        setLoopId(newLoopId)
       }
 
+      /**
+       * TODO: Consider bringing this back later to sync loops across devices
+       *
       const loopx = await db.loops.toArray();
 
       if (props.userId) {
@@ -405,6 +427,7 @@ const Player: Component<Props> = (props) => {
           }
         });
       }
+      */
 
       // Show success state
       setSaveSuccess(true);
