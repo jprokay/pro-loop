@@ -40,7 +40,7 @@ export default function Nav() {
   })
 
   return (
-    <nav class="navbar bg-neutral shadow-sm">
+    <nav class="navbar bg-neutral shadow-sm px-8">
       <div class="navbar-start">
         <A href="/practice/song" class="btn btn-primary btn-sm md:btn-md
 ">New Loop</A>

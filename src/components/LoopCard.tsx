@@ -39,7 +39,8 @@ export const LoopCard: Component<Props> = (props) => {
         <h2 class="card-title">{props.songName}</h2>
         <p>Continue practicing {props.loopName}?</p>
         <div class="card-actions justify-end">
-          <A href={`/practice/song?${sParams.toString()}`} class="btn btn-primary">Play</A>
+          <A href={`/practice/song?${sParams.toString()}`} class="btn btn-secondary btn-sm md:btn-md
+">Play</A>
         </div>
       </div>
     </div>
