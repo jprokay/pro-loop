@@ -1,5 +1,5 @@
 import { A, useSearchParams } from "@solidjs/router";
-import { Component, For, onMount } from "solid-js"
+import { Component, For, onMount, createSignal } from "solid-js"
 import Tag from "./Tag";
 
 type Props = {
@@ -18,6 +18,7 @@ type Props = {
   tags: string[]
 }
 export const LoopCard: Component<Props> = (props) => {
+  const [imageLoaded, setImageLoaded] = createSignal(false);
   const sParams = new URLSearchParams()
   sParams.append("loopId", props.loopId)
   sParams.append("loopName", props.loopName)
@@ -33,7 +34,7 @@ export const LoopCard: Component<Props> = (props) => {
     <div class="card bg-base-100 image-full max-w-96 shadow-sm">
       <figure>
         <div 
-          class="bg-gray-200 animate-pulse w-full h-full absolute top-0 left-0"
+          class={`bg-gray-200 ${!imageLoaded() ? 'animate-pulse' : 'hidden'} w-full h-full absolute top-0 left-0`}
           style="aspect-ratio: 16/9;"
           aria-hidden="true"
         ></div>
@@ -44,6 +45,7 @@ export const LoopCard: Component<Props> = (props) => {
           width="640"
           loading="lazy"
           decoding="async"
+          onLoad={() => setImageLoaded(true)}
           onError={(e) => {
             // Fallback to mqdefault if sddefault fails
             e.currentTarget.src = `https://img.youtube.com/vi/${props.videoId}/mqdefault.jpg`;
