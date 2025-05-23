@@ -33,7 +33,7 @@ export const LoopCard: Component<Props> = (props) => {
   return (
     <div class="card bg-base-100 image-full max-w-96 shadow-sm">
       <figure>
-        <div 
+        <div
           class={`bg-gray-200 ${!imageLoaded() ? 'animate-pulse' : 'hidden'} w-full h-full absolute top-0 left-0`}
           style="aspect-ratio: 16/9;"
           aria-hidden="true"
@@ -43,7 +43,6 @@ export const LoopCard: Component<Props> = (props) => {
           alt={`YouTube thumbnail for ${props.songName}`}
           height="360"
           width="640"
-          loading="lazy"
           decoding="async"
           onLoad={() => setImageLoaded(true)}
           onError={(e) => {

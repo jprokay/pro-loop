@@ -7,27 +7,23 @@ import { clientOnly } from "@solidjs/start";
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 import { MetaProvider } from "@solidjs/meta"
 
-const ClientOnlyClerk = clientOnly(() => import("./context/AuthProvider"));
+//const ClientOnlyClerk = clientOnly(() => import("./context/AuthProvider"));
 
-const queryClient = new QueryClient()
+//const queryClient = new QueryClient()
 
 export default function App() {
   return (
     <MetaProvider>
-      <QueryClientProvider client={queryClient}>
-        <ClientOnlyClerk value={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
-          <Router
-            root={props => (
-              <>
-                <Nav />
-                <Suspense>{props.children}</Suspense>
-              </>
-            )}
-          >
-            <FileRoutes />
-          </Router>
-        </ClientOnlyClerk>
-      </QueryClientProvider>
+      <Router
+        root={props => (
+          <>
+            <Nav />
+            <Suspense>{props.children}</Suspense>
+          </>
+        )}
+      >
+        <FileRoutes />
+      </Router>
     </MetaProvider>
 
   );

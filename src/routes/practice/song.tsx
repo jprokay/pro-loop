@@ -2,7 +2,6 @@ import { useSearchParams } from "@solidjs/router";
 import { Show, createMemo, createResource } from "solid-js";
 import Player from "~/components/Player";
 import VideoSearch from "~/components/VideoSearch";
-import { useAuthContext } from "~/context/auth-context";
 
 const DEFAULT_ID = 'nN120kCiVyQ';
 function videoIdToUrl(videoId: string): string {
@@ -58,7 +57,7 @@ export default function PracticePage() {
   const [search, setSearch] = useSearchParams();
   const [data] = createResource(() => String(search.videoId || DEFAULT_ID), fetchInfo)
 
-  const clerk = useAuthContext()
+  // const clerk = useAuthContext()
   // Create stable props for the Player component
   const videoId = createMemo(() => String(search.videoId || DEFAULT_ID));
   const videoUrl = createMemo(() => videoIdToUrl(videoId()));
@@ -67,16 +66,6 @@ export default function PracticePage() {
   const endMinute = createMemo(() => Number(search.endMinute) || 0);
   const endSecond = createMemo(() => Number(search.endSecond) || 0);
   const loopId = createMemo(() => Number(search.loopId) || undefined);
-  const userId = createMemo(() => {
-    if (clerk.latest) {
-      const user = clerk().user
-      if (user) {
-        return user.id
-      }
-    }
-    return undefined
-  })
-
   function handleVideoSelect(videoId: string, title: string) {
     setSearch({ videoId, songName: title, startMinute: 0, startSecond: 0, endMinute: undefined, endSecond: undefined });
   }
@@ -91,7 +80,7 @@ export default function PracticePage() {
           <Player
             loopId={loopId()}
             videoName={data()}
-            userId={userId()}
+            userId={undefined}
             fallback={<p>Loading player...</p>}
             videoUrl={videoUrl()}
             enableSave={true}
