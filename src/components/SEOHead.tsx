@@ -18,7 +18,7 @@ const SEOHead: Component<SEOHeadProps> = (props) => {
   const defaultTitle = "Pro-L00ps | Music Practice Tool";
   const defaultDescription =
     "Create, save, and practice custom YouTube video loops. Perfect for musicians learning difficult passages.";
-  const baseUrl = "https://pro-loops.jprokay.com";
+  const baseUrl = "https://proloops.jprokay.com";
 
   return (
     <>

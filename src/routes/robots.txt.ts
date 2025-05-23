@@ -9,12 +9,12 @@ Allow: /
 Disallow: /admin/
 
 # Sitemap location
-Sitemap: https://pro-loops.jprokay.com/sitemap.xml`,
-    { 
-      headers: { 
+Sitemap: https://proloops.jprokay.com/sitemap.xml`,
+    {
+      headers: {
         "Content-Type": "text/plain",
-        "Cache-Control": "public, max-age=86400" 
-      }
-    }
+        "Cache-Control": "public, max-age=86400",
+      },
+    },
   );
 }

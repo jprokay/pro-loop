@@ -56,7 +56,7 @@ export default function PracticePage() {
       <SEOHead
         title="Pro-L00ps | Your Music Loop Library"
         description="Create, save and practice YouTube music loops. Master difficult passages with precise control."
-        canonicalUrl="https://pro-loops.jprokay.com/"
+        canonicalUrl="https://proloops.jprokay.com/"
       />
       <div class="w-full min-w-full py-8 px-8 bg-base-300">
         <div class="mb-6 max-w-md mx-auto">

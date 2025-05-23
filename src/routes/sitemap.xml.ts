@@ -1,8 +1,7 @@
 import { APIEvent } from "@solidjs/start/server";
-import { db } from "~/db/db";
 
 export async function GET(event: APIEvent) {
-  const baseUrl = "https://pro-loops.jprokay.com";
+  const baseUrl = "https://proloops.jprokay.com";
 
   // Static routes
   const staticRoutes = [
